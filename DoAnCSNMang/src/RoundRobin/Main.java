@@ -26,28 +26,14 @@ public class Main {
 		int totalofprocess = 6;
 		int timequantum = 3;
 		
+		
 		RoundRobin rb = new RoundRobin(totalofprocess, timequantum, listprocess);
 		rb.outputListProcess();
-		
+		System.out.println();
+		System.out.println("Ready List Process:");
 		rb.Scheduling();
 		rb.outputListTimeLine();
-//		TimeLine t1 = new TimeLine("P1", 0, 4);
-//		TimeLine t2 = new TimeLine("P2", 4, 5);
-//		t1.outputTimeLine();
-//		t2.outputTimeLine();
-//		
-//		System.out.println();
-//		Queue<Process> readyProcesses = new LinkedList<>();
-//		readyProcesses.offer(p1);
-//		readyProcesses.offer(p2);
-//		readyProcesses.offer(p3);
-//		Process temp = readyProcesses.remove();
-//		temp = readyProcesses.remove();
-//		temp.outputProcess();
-//		readyProcesses.offer(p1);
-//		for (Process process : readyProcesses) {
-//			System.out.println(process.getIdOfProcessing()+"\t"+process.getTimeArrival()+"\t\t"+process.getTimeProcessing());
-//		}
+
 	}
 
 }

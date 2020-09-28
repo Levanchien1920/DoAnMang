@@ -1,9 +1,9 @@
 package RoundRobin;
 
 public class Process {
-	private int idOfProcessing;
-	private int timeArrival;
-	private int timeProcessing;
+	protected int idOfProcessing;
+	protected int timeArrival;
+	protected int timeProcessing;
 
 	public Process(int idOfProcessing, int timeArrival, int timeProcessing) {
 		super();

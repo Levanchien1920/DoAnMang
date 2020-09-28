@@ -49,10 +49,7 @@ public class RoundRobin {
 	
 	public void Scheduling() {
 		int countProcess = totaOfPrcess;
-		int time = listProcess.get(0).getTimeArrival(); //index time in time line
 		int start = listProcess.get(0).getTimeArrival();
-//		Process x = listProcess.get(0);
-//		this.readyListProcesses.add((Process)x);
 		toReadyList(-1,  listProcess.get(0).getTimeArrival());
 		for (Process process : readyListProcesses) {
 			System.out.print(process.getIdOfProcessing()+" ");
@@ -82,7 +79,6 @@ public class RoundRobin {
 			TimeLine tl = new TimeLine(Integer.toString(temp.getIdOfProcessing()), start, start+indexTime);
 			this.timeLine.add(tl);
 			start= start+indexTime;	
-			time++;
 			
 			for (Process process : readyListProcesses) {
 				System.out.print(process.getIdOfProcessing()+" ");
