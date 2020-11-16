@@ -21,8 +21,8 @@ public class ConnectDB {
         Connection con = null;
         Statement st = null;
         ResultSet rs = null;
-        int id= 1;
-        String name= "A";
+        int id= 2;
+        String name= "a";
         String password="123";
         int status =1;
         try {
