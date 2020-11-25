@@ -1,6 +1,5 @@
 C:\Users\Admin\Documents\NetBeansProjects\Net\src\main\java\server\StartServer.java
 C:\Users\Admin\Documents\NetBeansProjects\Net\src\main\java\client\ClientMain.java
-C:\Users\Admin\Documents\NetBeansProjects\Net\src\main\java\client\ConnectDB.java
 C:\Users\Admin\Documents\NetBeansProjects\Net\src\main\java\client\Register.java
 C:\Users\Admin\Documents\NetBeansProjects\Net\src\main\java\model\Conversation.java
 C:\Users\Admin\Documents\NetBeansProjects\Net\src\main\java\client\MainFrameAllClient.java
@@ -9,5 +8,6 @@ C:\Users\Admin\Documents\NetBeansProjects\Net\src\main\java\client\ConnectToServ
 C:\Users\Admin\Documents\NetBeansProjects\Net\src\main\java\client\CheckLogin.java
 C:\Users\Admin\Documents\NetBeansProjects\Net\src\main\java\model\Client.java
 C:\Users\Admin\Documents\NetBeansProjects\Net\src\main\java\model\Message.java
+C:\Users\Admin\Documents\NetBeansProjects\Net\src\main\java\client\CheckRegister.java
 C:\Users\Admin\Documents\NetBeansProjects\Net\src\main\java\client\Login.java
 C:\Users\Admin\Documents\NetBeansProjects\Net\src\main\java\server\RunServer.java

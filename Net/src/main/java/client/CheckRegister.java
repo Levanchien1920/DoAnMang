@@ -7,7 +7,6 @@ package client;
 
 import connection.MyConnection;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -15,26 +14,29 @@ import java.sql.Statement;
  *
  * @author iamChien.iter
  */
-public class ConnectDB {
+public class CheckRegister {
 
     public static void main(String[] args) {
+    }
+      public static void checkRegister(String username, String password) {
         Connection con = null;
         Statement st = null;
-        ResultSet rs = null;
-        int id= 2;
-        String name= "a";
-        String password="123";
-        int status =1;
+        int id =2;
+        int status = 0;
         try {
-            con = MyConnection.getConnection();
+             con = MyConnection.getConnection();
             st = con.createStatement();
-            String sql1 = "INSERT INTO user(id,username,password,status) VALUES('" + id + "','" + name + "','" + password
+            String sql1 = "INSERT INTO user(id,username,password,status) VALUES('" + id + "','" + username + "','" + password
                     + "','" + status + "')";
             int result = st.executeUpdate(sql1);
 
             if (result == 1) {
 
                 System.out.println("Inserted");;
+
+            }
+            else{
+                System.out.println("Not inserted");
             }
         } catch (SQLException e) {
             e.printStackTrace();

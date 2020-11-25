@@ -11,8 +11,6 @@ import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -34,6 +32,7 @@ public class Login extends javax.swing.JFrame {
 
     public void initEvent() {
         btLogin();
+        btReset();
     }
 
     /**
@@ -152,6 +151,17 @@ public class Login extends javax.swing.JFrame {
             public void mousePressed(MouseEvent e) {
                 CheckLogin checklogin = new CheckLogin();
                 checklogin.checkLogin(jTextField1.getText(), jPasswordField1.getText());
+            }
+
+        });
+    }
+
+    private void btReset() {
+        jButton2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                jTextField1.setText("");
+                jPasswordField1.setText("");
             }
 
         });
