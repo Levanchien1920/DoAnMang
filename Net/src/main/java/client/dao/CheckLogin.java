@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package client;
+package client.dao;
 
+import client.Main;
+import client.Register;
 import connection.MyConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -16,12 +18,14 @@ import javax.swing.JOptionPane;
  *
  * @author iamChien.iter
  */
+
 public class CheckLogin {
 
     public static void main(String[] args) {
 
     }
 
+    
     public static void checkLogin(String username, String password) {
         Connection con = null;
         Statement st = null;
@@ -31,11 +35,13 @@ public class CheckLogin {
             con = MyConnection.getConnection();
             st = con.createStatement();
             String sql = "Select username,password from user WHERE password='" + password + "' and username='" + username + "'";
+            String sqlUpdateStatus = "UPDATE `user` SET `status`=1 WHERE username='"+username+"'";
             rs = st.executeQuery(sql);
 
             if (rs.next()) {
+                int executeUpdate = st.executeUpdate(sqlUpdateStatus);
                 JOptionPane.showMessageDialog(null, "Password and Username is correct");
-                MainFrameAllClient a = new MainFrameAllClient();
+                Main a = new Main(username);
                 a.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(null, "Password and Username is incorrect");

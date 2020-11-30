@@ -28,9 +28,9 @@ public class RunServer {
         //super();
     }
 
-    public void startServer() {
+    public void startServer(int port) {
         try {
-            server = new ServerSocket(2810);
+            server = new ServerSocket(port);
             isStarted = true;
             System.out.println("Server Started!");
             while (isStarted) {
@@ -99,6 +99,7 @@ public class RunServer {
     }
 
     public static void main(String[] args) {
-        new RunServer().startServer();
+        int port = 5000;
+        new RunServer().startServer(port);
     }
 }

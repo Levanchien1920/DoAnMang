@@ -5,6 +5,7 @@
  */
 package client;
 
+import client.dao.CheckLogin;
 import connection.MyConnection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -34,6 +35,8 @@ public class Login extends javax.swing.JFrame {
         btLogin();
         btReset();
     }
+    
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -67,12 +70,14 @@ public class Login extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(0, 0, 204));
         jLabel3.setText("Password:");
 
+        jTextField1.setText("Chien123");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
             }
         });
 
+        jPasswordField1.setText("123");
         jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordField1ActionPerformed(evt);
@@ -147,10 +152,12 @@ public class Login extends javax.swing.JFrame {
 
     private void btLogin() {
         jButton1.addMouseListener(new MouseAdapter() {
+        
             @Override
             public void mousePressed(MouseEvent e) {
                 CheckLogin checklogin = new CheckLogin();
                 checklogin.checkLogin(jTextField1.getText(), jPasswordField1.getText());
+                dispose();
             }
 
         });
