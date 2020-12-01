@@ -3,15 +3,8 @@ package client;
 
 import client.dao.CheckLogout;
 import client.dao.ShowListCLient;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Vector;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.util.*;
 import model.User;
@@ -86,8 +79,6 @@ public class Main extends javax.swing.JFrame {
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
-
-        jTextField1.setText("jTextField1");
 
         jButton1.setText("jButton1");
 

@@ -20,15 +20,20 @@ import java.util.List;
 public class RunServer {
 
     private String dataStringFromClient;
-    private boolean isStarted;
-    private ServerSocket server;
+    private  boolean isStarted;
+    private  ServerSocket server;
     List<Client> clientList = new ArrayList<Client>();
 
     public RunServer() {
-        //super();
+    }
+
+    
+    public RunServer(int port) {
+        new RunServer().startServer(port);
     }
 
     public void startServer(int port) {
+        System.out.println(port);
         try {
             server = new ServerSocket(port);
             isStarted = true;
@@ -98,8 +103,8 @@ public class RunServer {
         }
     }
 
-    public static void main(String[] args) {
-        int port = 5000;
-        new RunServer().startServer(port);
-    }
+//    public static void main(String[] args) {
+//        int port = 5000;
+//        new RunServer().startServer(port);
+//    }
 }

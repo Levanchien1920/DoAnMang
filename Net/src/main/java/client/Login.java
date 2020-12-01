@@ -9,6 +9,7 @@ import client.dao.CheckLogin;
 import connection.MyConnection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.Socket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,12 +23,22 @@ public class Login extends javax.swing.JFrame {
     Connection conn = null;
     ResultSet rs = null;
     PreparedStatement pst = null;
-
+    Socket socket = null;
+    
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
         // conn = new MyConnection();
         conn = MyConnection.getConnection();
+        initEvent();
+    }
+    
+    public Login(Socket soc){
+        initComponents();
+        this.setLocationRelativeTo(null);
+        
+        socket = soc;
+        System.out.println(socket);
         initEvent();
     }
 
