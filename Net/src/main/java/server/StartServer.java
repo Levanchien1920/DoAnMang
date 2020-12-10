@@ -2,14 +2,18 @@ package server;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.text.html.HTML;
-
+import model.Message;
+import model.Process;
+import model.User;
 public class StartServer extends javax.swing.JFrame {
 
     ServerSocket serverSocket = null;
@@ -161,7 +165,12 @@ class ServerChat extends Thread{
     
     @Override
     public void run() {
-        super.run(); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Start chat");
+        
+        
+
+        // read the list of messages from the socket
+        
     }
 
 }
@@ -174,14 +183,23 @@ class ServerControl extends Thread{
         this.socket = socket;
     }
 
-    
     @Override
     public void run() {
-        //input
-        //output
-        //data
-        //        if(data.label == login){
-        //            
-        //        }els
+        System.out.println("Start control");
+        try {
+            while(true){
+                    InputStream inputStream = socket.getInputStream();
+                    ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                    Process p = (Process)objectInputStream.readObject();
+                    if(p.getControl().equals("login")){
+                        DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+                        dos.writeBoolean(true);
+                    }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ServerChat.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ServerChat.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
 }

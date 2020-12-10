@@ -103,9 +103,9 @@ public class ConnectToServer extends javax.swing.JFrame {
 
     private void connectToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectToServerActionPerformed
         try {
-            String host = txtHost.getText();
+//            String host = txtHost.getText();
             String port = txtIp.getText();
-            Socket socket = new Socket(InetAddress.getByName(host), Integer.parseInt(port));
+            Socket socket = new Socket(InetAddress.getLocalHost(), Integer.parseInt(port));
             Login login = new Login(socket);
             login.setVisible(true);
             dispose();

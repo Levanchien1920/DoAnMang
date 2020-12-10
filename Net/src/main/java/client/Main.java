@@ -3,6 +3,7 @@ package client;
 
 import client.dao.CheckLogout;
 import client.dao.ShowListCLient;
+import java.net.Socket;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
@@ -14,7 +15,7 @@ import model.User;
  * @author caoquangtrong
  */
 public class Main extends javax.swing.JFrame {
-
+    Socket socket = null;
     private final String header[] = {"Status", "Full name"};
     private DefaultTableModel tblModel;
     private String usernameRecent;
@@ -30,6 +31,12 @@ public class Main extends javax.swing.JFrame {
         initComponents();
     }
 
+    public Main(Socket socket){
+        this.socket = socket;
+        this.tblModel = new DefaultTableModel(header, 0);
+        initComponents();
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -71,6 +78,9 @@ public class Main extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
@@ -236,6 +246,8 @@ public class Main extends javax.swing.JFrame {
         int x = users.size();
         Object[][] data = new Object[x][2];
         
+        
+        
         for(int i = 0; i< users.size(); i++){
             Icon icon = notActive;
             if(users.get(i).getStatus() == 1){
@@ -280,6 +292,10 @@ public class Main extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_btnLogOutActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        System.out.println("Closing");
+    }//GEN-LAST:event_formWindowClosing
 
     
     public static void main(String args[]) {

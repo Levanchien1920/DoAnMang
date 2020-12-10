@@ -5,11 +5,13 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author iamChien.iter
  */
-public class Message {
+public class Message implements Serializable{
 
     private int id_msg;
     private String body_msg;
@@ -24,6 +26,11 @@ public class Message {
         this.date_send = date_send;
         this.id_con = id_con;
     }
+
+    public Message() {
+    }
+    
+    
 
     public int getId_msg() {
         return id_msg;
