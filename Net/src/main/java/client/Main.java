@@ -8,6 +8,8 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 import java.util.*;
+import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
 import model.User;
 
 /**
@@ -135,6 +137,7 @@ public class Main extends javax.swing.JFrame {
         tblFriend.setFocusable(false);
         tblFriend.setRequestFocusEnabled(false);
         tblFriend.setRowHeight(30);
+        tblFriend.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tblFriend);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -246,8 +249,6 @@ public class Main extends javax.swing.JFrame {
         int x = users.size();
         Object[][] data = new Object[x][2];
         
-        
-        
         for(int i = 0; i< users.size(); i++){
             Icon icon = notActive;
             if(users.get(i).getStatus() == 1){
@@ -271,9 +272,17 @@ public class Main extends javax.swing.JFrame {
                 return getValueAt(0, column).getClass();
             }
         };
+        
         tblFriend.setModel(model); // Thêm dữ liệu vào table
-        tblFriend.setPreferredScrollableViewportSize(tblFriend.getPreferredSize());
+        //tblFriend.getColumnModel().getColumn(1).setWidth(100);
+        //tblFriend.setPreferredScrollableViewportSize(tblFriend.getPreferredSize());
+        tblFriend.getColumnModel().getColumn(1).setPreferredWidth(400);
+        tblFriend.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+        tblFriend.getTableHeader().setResizingAllowed(false);
+        
     }
+    
+
     
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         

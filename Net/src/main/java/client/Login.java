@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -66,6 +68,7 @@ public class Login extends javax.swing.JFrame {
         txtPassword = new javax.swing.JPasswordField();
         btnLogin = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
+        btnRegister = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -104,6 +107,13 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        btnRegister.setText("REGISTER");
+        btnRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegisterActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -128,6 +138,10 @@ public class Login extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnReset)))
                 .addContainerGap(48, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnRegister)
+                .addGap(152, 152, 152))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -146,7 +160,9 @@ public class Login extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLogin)
                     .addComponent(btnReset))
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnRegister)
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         pack();
@@ -165,10 +181,10 @@ public class Login extends javax.swing.JFrame {
             Message message = new Message();
             Process p = new Process(control, user, message);
             objectOutputStream.writeObject(p);
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            Boolean result = null;
-            result = dis.readBoolean();
-            if(result == true){
+            InputStream inputStream = socket.getInputStream();
+            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+            p = (Process)objectInputStream.readObject();
+            if(p.getReply() == true){
                 System.out.println("Login true");
                 Main main = new Main(socket);
                 main.setVisible(true);
@@ -178,13 +194,22 @@ public class Login extends javax.swing.JFrame {
             }
         } catch (IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
-        //JOptionPane.showMessageDialog(null, "Reset button");
+        txtUsername.setText("");
+        txtPassword.setText("");
     }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+        Register re = new Register(socket);
+        re.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnRegisterActionPerformed
 
 
     /**
@@ -224,6 +249,7 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
+    private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnReset;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

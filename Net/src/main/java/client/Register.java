@@ -8,6 +8,7 @@ package client;
 import client.dao.CheckRegister;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.Socket;
 import javax.swing.JOptionPane;
 
 /**
@@ -16,18 +17,21 @@ import javax.swing.JOptionPane;
  */
 public class Register extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Regis
-     */
+    Socket socket;
     public Register() {
         initComponents();
     }
-
-    public void initEvent() {
-        btRegister();
-        btReset();
-        btExit();
+    
+    public Register(Socket socket) {
+        this.socket =socket;
+        initComponents();
     }
+
+//    public void initEvent() {
+//        btRegister();
+//        btReset();
+//        btExit();
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -51,12 +55,6 @@ public class Register extends javax.swing.JFrame {
         txtFullname = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jPanel1formMousePressed(evt);
-            }
-        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 204));
@@ -82,32 +80,24 @@ public class Register extends javax.swing.JFrame {
         btReset.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btReset.setForeground(new java.awt.Color(0, 51, 204));
         btReset.setText("Reset");
-
-        txtUsernameInput.addActionListener(new java.awt.event.ActionListener() {
+        btReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUsernameInputActionPerformed(evt);
+                btResetActionPerformed(evt);
             }
         });
 
         btExit.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btExit.setForeground(new java.awt.Color(0, 51, 204));
         btExit.setText("Exit");
+        btExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btExitActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 51, 204));
         jLabel4.setText("Fullname");
-
-        txtPassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPasswordActionPerformed(evt);
-            }
-        });
-
-        txtFullname.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFullnameActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -183,61 +173,55 @@ public class Register extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
- private void btRegister() {
-        btRegister.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                
-            }
-
-        });
-    }
-
-    private void btReset() {
-        btReset.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                txtUsernameInput.setText("");
-                txtPassword.setText("");
-            }
-
-        });
-    }
-
-    private void btExit() {
-        btReset.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                dispose();
-            }
-
-        });
-    }
+// private void btRegister() {
+//        btRegister.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mousePressed(MouseEvent e) {
+//                
+//            }
+//
+//        });
+//    }
+//
+//    private void btReset() {
+//        btReset.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mousePressed(MouseEvent e) {
+//                txtUsernameInput.setText("");
+//                txtPassword.setText("");
+//            }
+//
+//        });
+//    }
+//
+//    private void btExit() {
+//        btReset.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mousePressed(MouseEvent e) {
+//                dispose();
+//            }
+//
+//        });
+//    }
     private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
-        CheckRegister checkregister = new CheckRegister();
-        if(checkregister.checkRegister(txtUsernameInput.getText(), txtPassword.getText(), txtFullname.getText())){
-            JOptionPane.showMessageDialog(null, "Sucessfully");
-            dispose();
-            Login login = new Login();
-            login.setVisible(true);
-        }
+//        CheckRegister checkregister = new CheckRegister();
+//        if(checkregister.checkRegister(txtUsernameInput.getText(), txtPassword.getText(), txtFullname.getText())){
+//            JOptionPane.showMessageDialog(null, "Sucessfully");
+//            dispose();
+//            Login login = new Login();
+//            login.setVisible(true);
+//        }
     }//GEN-LAST:event_btRegisterActionPerformed
 
-    private void txtUsernameInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsernameInputActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtUsernameInputActionPerformed
+    private void btResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btResetActionPerformed
+        txtFullname.setText("");
+        txtUsernameInput.setText("");
+        txtPassword.setText("");
+    }//GEN-LAST:event_btResetActionPerformed
 
-    private void jPanel1formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1formMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jPanel1formMousePressed
-
-    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtPasswordActionPerformed
-
-    private void txtFullnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFullnameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFullnameActionPerformed
+    private void btExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExitActionPerformed
+        
+    }//GEN-LAST:event_btExitActionPerformed
 
     /**
      * @param args the command line arguments

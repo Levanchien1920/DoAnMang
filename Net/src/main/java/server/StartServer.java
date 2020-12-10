@@ -7,17 +7,24 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Message;
 import model.Process;
 import model.User;
+import model.UserSocket;
 public class StartServer extends javax.swing.JFrame {
 
     ServerSocket serverSocket = null;
     int port;
+    public static List<UserSocket> listUserSocket = new ArrayList<UserSocket>();
+    
     public StartServer() {
         initComponents();
         
@@ -96,8 +103,7 @@ public class StartServer extends javax.swing.JFrame {
                        control.start();
                        ServerChat chat = new ServerChat(socket);
                        chat.start();
-                       
-                       
+
                        System.out.println(socket);
                    }
                } catch (IOException ex) {
@@ -111,10 +117,7 @@ public class StartServer extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnStopServerActionPerformed
 
-    private void execute(){
-        
-    }
-    
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -166,10 +169,9 @@ class ServerChat extends Thread{
     @Override
     public void run() {
         System.out.println("Start chat");
-        
-        
-
-        // read the list of messages from the socket
+        //nhan tin nhan
+        //kiem tra doi tuong nhan, gui cho nguoi nhan neu User on
+        //luu tin nhan vao database
         
     }
 
@@ -192,8 +194,23 @@ class ServerControl extends Thread{
                     ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                     Process p = (Process)objectInputStream.readObject();
                     if(p.getControl().equals("login")){
-                        DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-                        dos.writeBoolean(true);
+                        //xu ly login
+                        OutputStream outputStream = socket.getOutputStream();
+                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                        if(p.getUser().getUsername().equals("trong") && p.getUser().getPassword().equals("123")){
+                            //kiem tra login thanh cong
+                            //them user vao listUserSocket
+                            //chuyen trang thai thanh on cho user
+                            p.setReply(true);
+                            StartServer.listUserSocket.add(new UserSocket(socket, p.getUser()));
+                            System.out.println(socket.getPort() + ":" + "Login Success");
+                        }else{
+                            p.setReply(false);
+                            System.out.println(socket.getPort() + ":" + "Login Failure");
+                        }
+                        objectOutputStream.writeObject(p);
+                    }else if(p.getControl().equals("register")){
+                        
                     }
             }
         } catch (IOException ex) {

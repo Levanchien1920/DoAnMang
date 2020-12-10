@@ -15,11 +15,32 @@ public class Process implements Serializable {
     private User user;
     private Message message;
     private String control;
+    private Boolean reply;
+
+    public Process(User user, Message message, String control, Boolean reply) {
+        this.user = user;
+        this.message = message;
+        this.control = control;
+        this.reply = reply;
+    }
+
+    public Boolean getReply() {
+        return reply;
+    }
+
+    public void setReply(Boolean reply) {
+        this.reply = reply;
+    }
+
+    
+    
+    
 
     public Process(String control, User user, Message message) {
         this.user = user;
         this.message = message;
         this.control = control;
+        this.reply = null;
     }
 
     public Process() {
