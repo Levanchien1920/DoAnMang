@@ -59,6 +59,12 @@ public class ConnectToServer extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(0, 51, 204));
         jLabel2.setText("Server Port:");
 
+        txtHost.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHostActionPerformed(evt);
+            }
+        });
+
         txtIp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtIpActionPerformed(evt);
@@ -119,6 +125,10 @@ public class ConnectToServer extends javax.swing.JFrame {
     private void txtIpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIpActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtIpActionPerformed
+
+    private void txtHostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHostActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHostActionPerformed
 
     /**
      * @param args the command line arguments

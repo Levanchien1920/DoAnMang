@@ -40,6 +40,8 @@ public class StartServer extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        txtPort.setText("1111");
+
         btnStartServer.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnStartServer.setForeground(new java.awt.Color(0, 51, 255));
         btnStartServer.setText("Start Server");
