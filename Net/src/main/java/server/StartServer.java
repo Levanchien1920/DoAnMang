@@ -1,5 +1,6 @@
 package server;
 
+import server.dao.CheckLogin;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.DataInputStream;
@@ -19,15 +20,16 @@ import model.Message;
 import model.Process;
 import model.User;
 import model.UserSocket;
+
 public class StartServer extends javax.swing.JFrame {
 
     ServerSocket serverSocket = null;
     int port;
     public static List<UserSocket> listUserSocket = new ArrayList<UserSocket>();
-    
+
     public StartServer() {
         initComponents();
-        
+
     }
 
     @SuppressWarnings("unchecked")
@@ -90,35 +92,34 @@ public class StartServer extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnStartServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartServerActionPerformed
-       btnStartServer.addActionListener(new ActionListener() {
-           @Override
-           public void actionPerformed(ActionEvent e) {
+        btnStartServer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 String port = txtPort.getText();
-               try {
-                   serverSocket = new ServerSocket(Integer.parseInt(port));
-                   System.out.println("Server is started");
-                   while (true) {                       
-                       Socket socket = serverSocket.accept();
-                       
-                       //new thread
-                       ServerControl control = new ServerControl(socket);
-                       control.start();
-                       ServerChat chat = new ServerChat(socket);
-                       chat.start();
+                try {
+                    serverSocket = new ServerSocket(Integer.parseInt(port));
+                    System.out.println("Server is started");
+                    while (true) {
+                        Socket socket = serverSocket.accept();
 
-                       System.out.println(socket);
-                   }
-               } catch (IOException ex) {
-                   Logger.getLogger(StartServer.class.getName()).log(Level.SEVERE, null, ex);
-               }
-           }
-       });
+                        //new thread
+                        ServerControl control = new ServerControl(socket);
+                        control.start();
+                        ServerChat chat = new ServerChat(socket);
+                        chat.start();
+
+                        System.out.println(socket);
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(StartServer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }//GEN-LAST:event_btnStartServerActionPerformed
 
     private void btnStopServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopServerActionPerformed
-        
-    }//GEN-LAST:event_btnStopServerActionPerformed
 
+    }//GEN-LAST:event_btnStopServerActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -159,30 +160,29 @@ public class StartServer extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 }
 
-class ServerChat extends Thread{
-    
+class ServerChat extends Thread {
+
     private Socket socket;
 
     public ServerChat(Socket socket) {
         this.socket = socket;
     }
-    
-    
+
     @Override
     public void run() {
         System.out.println("Start chat");
         //nhan tin nhan
         //kiem tra doi tuong nhan, gui cho nguoi nhan neu User on
         //luu tin nhan vao database
-        
+
     }
 
 }
 
-class ServerControl extends Thread{
+class ServerControl extends Thread {
 
     private Socket socket;
-    
+
     public ServerControl(Socket socket) {
         this.socket = socket;
     }
@@ -191,34 +191,34 @@ class ServerControl extends Thread{
     public void run() {
         System.out.println("Start control");
         try {
-            while(true){
-                    InputStream inputStream = socket.getInputStream();
-                    ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                    Process p = (Process)objectInputStream.readObject();
-                    if(p.getControl().equals("login")){
-                        //xu ly login
-                        OutputStream outputStream = socket.getOutputStream();
-                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-                        if(p.getUser().getUsername().equals("trong") && p.getUser().getPassword().equals("123")){
-                            //kiem tra login thanh cong
-                            //them user vao listUserSocket
-                            //chuyen trang thai thanh on cho user
-                            p.setReply(true);
-                            StartServer.listUserSocket.add(new UserSocket(socket, p.getUser()));
-                            System.out.println(socket.getPort() + ":" + "Login Success");
-                        }else{
-                            p.setReply(false);
-                            System.out.println(socket.getPort() + ":" + "Login Failure");
-                        }
-                        objectOutputStream.writeObject(p);
-                    }else if(p.getControl().equals("register")){
-                        
+            while (true) {
+                InputStream inputStream = socket.getInputStream();
+                ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                Process p = (Process) objectInputStream.readObject();
+                if (p.getControl().equals("login")) {
+                    //xu ly login
+                    OutputStream outputStream = socket.getOutputStream();
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                    if (CheckLogin.checkLogin(p.getUser().getUsername(), p.getUser().getPassword())) {
+                        //kiem tra login thanh cong
+                        //them user vao listUserSocket
+                        //chuyen trang thai thanh on cho user
+                        p.setReply(true);
+                        StartServer.listUserSocket.add(new UserSocket(socket, p.getUser()));
+                        System.out.println(socket.getPort() + ":" + "Login Success");
+                    } else {
+                        p.setReply(false);
+                        System.out.println(socket.getPort() + ":" + "Login Failure");
                     }
+                    objectOutputStream.writeObject(p);
+                } else if (p.getControl().equals("register")) {
+
+                }
             }
         } catch (IOException ex) {
             Logger.getLogger(ServerChat.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ServerChat.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
     }
 }

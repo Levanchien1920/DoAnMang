@@ -5,7 +5,7 @@
  */
 package client;
 
-import client.dao.CheckRegister;
+import server.dao.CheckRegister;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.Socket;

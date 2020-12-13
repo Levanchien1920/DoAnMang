@@ -1,8 +1,7 @@
 package client;
 
-
-import client.dao.CheckLogout;
-import client.dao.ShowListCLient;
+import server.dao.CheckLogout;
+import server.dao.GetUser;
 import java.net.Socket;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -17,28 +16,29 @@ import model.User;
  * @author caoquangtrong
  */
 public class Main extends javax.swing.JFrame {
+
     Socket socket = null;
     private final String header[] = {"Status", "Full name"};
     private DefaultTableModel tblModel;
     private String usernameRecent;
-    
+
     public Main() {
         this.tblModel = new DefaultTableModel(header, 0);
         initComponents();
     }
-    
-    public Main(String username){
+
+    public Main(String username) {
         usernameRecent = username;
         this.tblModel = new DefaultTableModel(header, 0);
         initComponents();
     }
 
-    public Main(Socket socket){
+    public Main(Socket socket) {
         this.socket = socket;
         this.tblModel = new DefaultTableModel(header, 0);
         initComponents();
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -247,71 +247,67 @@ public class Main extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void loadAllFriend(List<User> users){
+    private void loadAllFriend(List<User> users) {
         Icon active = new ImageIcon("C:\\Users\\caoquangtrong\\OneDrive\\Documents\\NetBeansProjects\\DAM\\Net\\src\\main\\java\\image\\on.png");
         Icon notActive = new ImageIcon("C:\\Users\\caoquangtrong\\OneDrive\\Documents\\NetBeansProjects\\DAM\\Net\\src\\main\\java\\image\\off.png");
-        String[] columnNames ={"Status", "Name"};
+        String[] columnNames = {"Status", "Name"};
         int x = users.size();
         Object[][] data = new Object[x][2];
-        
-        for(int i = 0; i< users.size(); i++){
+
+        for (int i = 0; i < users.size(); i++) {
             Icon icon = notActive;
-            if(users.get(i).getStatus() == 1){
+            if (users.get(i).getStatus() == 1) {
                 icon = active;
             }
             Object o1 = icon;
             Object o2 = users.get(i).getFullname();
-            
+
             data[i][0] = o1;
             data[i][1] = o2;
 
             System.out.println(users.get(i).getFullname() + " :" + users.get(i).getStatus());
-            
+
         }
-        DefaultTableModel model = new DefaultTableModel(data, columnNames)
-        {
+        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             //  Returning the Class of each column will allow different
             //  renderers to be used based on Class
-            public Class getColumnClass(int column)
-            {
+            public Class getColumnClass(int column) {
                 return getValueAt(0, column).getClass();
             }
         };
-        
+
         tblFriend.setModel(model); // Thêm dữ liệu vào table
         //tblFriend.getColumnModel().getColumn(1).setWidth(100);
         //tblFriend.setPreferredScrollableViewportSize(tblFriend.getPreferredSize());
         tblFriend.getColumnModel().getColumn(1).setPreferredWidth(400);
         tblFriend.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         tblFriend.getTableHeader().setResizingAllowed(false);
-        
-    }
-    
 
-    
+    }
+
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        
-        List<User> users = new ArrayList<>();
-        users = ShowListCLient.getAll(usernameRecent);
-        loadAllFriend(users);
-        lbFullname.setText(usernameRecent);
+
+        // List<User> users = new ArrayList<>();
+        //users = GetUser.getUserByUsername(usernameRecent);
+        //loadAllFriend(users);
+        // lbFullname.setText(usernameRecent);
     }//GEN-LAST:event_formWindowOpened
 
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
-        
-        if(CheckLogout.checkLogout(usernameRecent)==1){
+
+        if (CheckLogout.checkLogout(usernameRecent) == 1) {
             Login login = new Login();
             login.setVisible(true);
             dispose();
         }
-        
+
     }//GEN-LAST:event_btnLogOutActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         System.out.println("Closing");
     }//GEN-LAST:event_formWindowClosing
 
-    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
