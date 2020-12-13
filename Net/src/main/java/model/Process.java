@@ -12,6 +12,7 @@ import java.io.Serializable;
  * @author caoquangtrong
  */
 public class Process implements Serializable {
+
     private User user;
     private Message message;
     private String control;
@@ -32,15 +33,16 @@ public class Process implements Serializable {
         this.reply = reply;
     }
 
-    
-    
-    
-
     public Process(String control, User user, Message message) {
         this.user = user;
         this.message = message;
         this.control = control;
         this.reply = null;
+    }
+
+    public Process(String control, User user) {
+        this.control = control;
+        this.user = user;
     }
 
     public Process() {
@@ -74,6 +76,5 @@ public class Process implements Serializable {
     public String toString() {
         return "Process{" + "user=" + user + ", message=" + message + ", control=" + control + '}';
     }
-    
-    
+
 }

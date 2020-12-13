@@ -184,7 +184,7 @@ public class Login extends javax.swing.JFrame {
     
             if(p.getReply() == true){
                 System.out.println("Login true");
-                Main main = new Main(socket);
+                Main main = new Main(socket); //
                 main.setVisible(true);
                 dispose();
             }else{

@@ -5,17 +5,34 @@
  */
 package client;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.User;
+import model.UserSocket;
+
 /**
  *
  * @author caoquangtrong
  */
 public class AccountSetting extends javax.swing.JFrame {
 
+    UserSocket usersocket;
+
     /**
      * Creates new form AccountSetting
      */
     public AccountSetting() {
         initComponents();
+    }
+
+    public AccountSetting(UserSocket usersocket) {
+        this.usersocket = usersocket;
+
     }
 
     /**
@@ -61,6 +78,11 @@ public class AccountSetting extends javax.swing.JFrame {
         btnSave.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnSave.setForeground(new java.awt.Color(0, 0, 255));
         btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnChangePassword.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnChangePassword.setForeground(new java.awt.Color(0, 0, 255));
@@ -196,6 +218,38 @@ public class AccountSetting extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        String username = txtUsername.getText();
+        String des = txtDescription.getText();
+        String fullname = txtFullName.getText();
+        OutputStream outputStream;
+        try {
+            if (usersocket.getSocket() == null) {
+                System.out.println("ABC");
+            }
+            outputStream = usersocket.getSocket().getOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            String control = "setting";
+            User user = new User(username, fullname, des);
+            //  Message message = new Message();
+            model.Process p = new model.Process(control, user);
+            objectOutputStream.writeObject(p);
+            InputStream inputStream = usersocket.getSocket().getInputStream();
+            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+            p = (model.Process) objectInputStream.readObject();
+
+            if (p.getReply() == true) {
+                System.out.println("Setting ok");
+            } else {
+                System.out.println("Can't save setting");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
 
     /**
      * @param args the command line arguments

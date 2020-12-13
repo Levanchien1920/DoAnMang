@@ -1,15 +1,14 @@
 package client;
 
 import server.dao.CheckLogout;
-import server.dao.GetUser;
 import java.net.Socket;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 import java.util.*;
 import javax.swing.JTable;
-import javax.swing.event.TableModelEvent;
 import model.User;
+import model.UserSocket;
 
 /**
  *
@@ -21,6 +20,7 @@ public class Main extends javax.swing.JFrame {
     private final String header[] = {"Status", "Full name"};
     private DefaultTableModel tblModel;
     private String usernameRecent;
+    private UserSocket userSocket;
 
     public Main() {
         this.tblModel = new DefaultTableModel(header, 0);
@@ -33,7 +33,7 @@ public class Main extends javax.swing.JFrame {
         initComponents();
     }
 
-    public Main(Socket socket) {
+    public Main(Socket socket) { //userSOCKET
         this.socket = socket;
         this.tblModel = new DefaultTableModel(header, 0);
         initComponents();
@@ -183,6 +183,11 @@ public class Main extends javax.swing.JFrame {
         btnSetting.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnSetting.setForeground(new java.awt.Color(0, 0, 255));
         btnSetting.setText("Account Setting");
+        btnSetting.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSettingActionPerformed(evt);
+            }
+        });
 
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Yêu màu hồng ghét sự giả dối");
@@ -307,6 +312,13 @@ public class Main extends javax.swing.JFrame {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         System.out.println("Closing");
     }//GEN-LAST:event_formWindowClosing
+
+    private void btnSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSettingActionPerformed
+        // new AccountSetting(usersocket);
+        AccountSetting acc = new AccountSetting(userSocket);
+        acc.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnSettingActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

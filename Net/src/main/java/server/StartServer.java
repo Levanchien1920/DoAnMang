@@ -1,5 +1,6 @@
 package server;
 
+import client.CheckRegister;
 import server.dao.CheckLogin;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -202,17 +203,39 @@ class ServerControl extends Thread {
                     if (CheckLogin.checkLogin(p.getUser().getUsername(), p.getUser().getPassword())) {
                         //kiem tra login thanh cong
                         //them user vao listUserSocket
+
                         //chuyen trang thai thanh on cho user
                         p.setReply(true);
                         StartServer.listUserSocket.add(new UserSocket(socket, p.getUser()));
                         System.out.println(socket.getPort() + ":" + "Login Success");
+
                     } else {
                         p.setReply(false);
                         System.out.println(socket.getPort() + ":" + "Login Failure");
                     }
                     objectOutputStream.writeObject(p);
-                } else if (p.getControl().equals("register")) {
+                } 
+                if (p.getControl().equals("register")) {
+//register 
+                    OutputStream outputStream = socket.getOutputStream();
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                    if (server.dao.CheckRegister.checkRegister(p.getUser().getUsername(), p.getUser().getPassword(), p.getUser().getFullname())) {
+                        //kiem tra login thanh cong
+                        //them user vao listUserSocket
 
+                        //chuyen trang thai thanh on cho user
+                        p.setReply(true);
+                        StartServer.listUserSocket.add(new UserSocket(socket, p.getUser()));
+                        System.out.println(socket.getPort() + ":" + "Register successfully");
+
+                    } else {
+                        p.setReply(false);
+                        System.out.println(socket.getPort() + ":" + "Register failed");
+                    }
+                    objectOutputStream.writeObject(p);
+                }
+                if(p.getControl().equals("setting")){
+                    
                 }
             }
         } catch (IOException ex) {
@@ -220,5 +243,6 @@ class ServerControl extends Thread {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ServerChat.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 }

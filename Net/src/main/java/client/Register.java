@@ -5,11 +5,16 @@
  */
 package client;
 
-import server.dao.CheckRegister;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.Socket;
-import javax.swing.JOptionPane;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Message;
+import model.User;
 
 /**
  *
@@ -18,12 +23,13 @@ import javax.swing.JOptionPane;
 public class Register extends javax.swing.JFrame {
 
     Socket socket;
+
     public Register() {
         initComponents();
     }
-    
+
     public Register(Socket socket) {
-        this.socket =socket;
+        this.socket = socket;
         initComponents();
     }
 
@@ -32,7 +38,6 @@ public class Register extends javax.swing.JFrame {
 //        btReset();
 //        btExit();
 //    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -211,6 +216,39 @@ public class Register extends javax.swing.JFrame {
 //            Login login = new Login();
 //            login.setVisible(true);
 //        }
+        String username = txtUsernameInput.getText();
+        String password = txtPassword.getText();
+        String fullname = txtFullname.getText();
+        OutputStream outputStream;
+        try {
+            if (socket == null) {
+                System.out.println("ABC");
+            }
+            outputStream = socket.getOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            String control = "register";
+            User user = new User(username, password, fullname);
+            //  Message message = new Message();
+            model.Process p = new model.Process(control, user);
+            objectOutputStream.writeObject(p);
+            InputStream inputStream = socket.getInputStream();
+            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+            p = (model.Process) objectInputStream.readObject();
+
+            if (p.getReply() == true) {
+                System.out.println("Registered");
+                Login login = new Login(socket); //
+                login.setVisible(true);
+                dispose();
+            } else {
+                System.out.println("Can't register");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_btRegisterActionPerformed
 
     private void btResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btResetActionPerformed
@@ -220,7 +258,7 @@ public class Register extends javax.swing.JFrame {
     }//GEN-LAST:event_btResetActionPerformed
 
     private void btExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExitActionPerformed
-        
+
     }//GEN-LAST:event_btExitActionPerformed
 
     /**
