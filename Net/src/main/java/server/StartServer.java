@@ -1,11 +1,8 @@
 package server;
 
-import client.CheckRegister;
 import server.dao.CheckLogin;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -17,10 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Message;
 import model.Process;
-import model.User;
 import model.UserSocket;
+import server.dao.CheckLogout;
 
 public class StartServer extends javax.swing.JFrame {
 
@@ -214,28 +210,50 @@ class ServerControl extends Thread {
                         System.out.println(socket.getPort() + ":" + "Login Failure");
                     }
                     objectOutputStream.writeObject(p);
-                } 
+                }
                 if (p.getControl().equals("register")) {
 //register 
                     OutputStream outputStream = socket.getOutputStream();
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-                    if (server.dao.CheckRegister.checkRegister(p.getUser().getUsername(), p.getUser().getPassword(), p.getUser().getFullname())) {
-                        //kiem tra login thanh cong
-                        //them user vao listUserSocket
-
-                        //chuyen trang thai thanh on cho user
+                    if (server.dao.CheckRegister.checkRegister(p.getUser().getUsername(), p.getUser().getPassword(), p.getUser().getFullname(),p.getUser().getDescription())) {
                         p.setReply(true);
                         StartServer.listUserSocket.add(new UserSocket(socket, p.getUser()));
-                        System.out.println(socket.getPort() + ":" + "Register successfully");
+                        System.out.println("Register successfully");
 
                     } else {
                         p.setReply(false);
-                        System.out.println(socket.getPort() + ":" + "Register failed");
+                        System.out.println("Register failed");
                     }
                     objectOutputStream.writeObject(p);
                 }
-                if(p.getControl().equals("setting")){
-                    
+                if (p.getControl().equals("setting")) {
+                    OutputStream outputStream = socket.getOutputStream();
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                    if (CheckLogin.checkLogin(p.getUser().getUsername(), p.getUser().getPassword())) {
+                        p.setReply(true);
+                        StartServer.listUserSocket.add(new UserSocket(socket, p.getUser()));
+                        System.out.println("Setting complete");
+
+                    } else {
+                        p.setReply(false);
+                        System.out.println("Cannot setting");
+                    }
+                    objectOutputStream.writeObject(p);
+
+                }
+                if (p.getControl().equals("logout")) {
+                    OutputStream outputStream = socket.getOutputStream();
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                    if (CheckLogout.checkLogout(p.getUser().getUsername()) == 1) {
+                        p.setReply(true);
+                        System.out.println("Logged out");
+
+                    } else {
+                        p.setReply(false);
+                        System.out.println("Cannot logout");
+                    }
+                    objectOutputStream.writeObject(p);
+
                 }
             }
         } catch (IOException ex) {

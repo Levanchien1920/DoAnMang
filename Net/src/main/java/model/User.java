@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author iamChien.iter
  */
-public class User implements Serializable{
+public class User implements Serializable {
 
     private int id;
     private String username;
@@ -33,6 +33,13 @@ public class User implements Serializable{
         this.username = username;
         this.fullname = fullname;
         this.password = password;
+    }
+
+    public User(String username, String fullname, String password, String description) {
+        this.username = username;
+        this.fullname = fullname;
+        this.password = password;
+        this.description = description;
     }
 
     public User(int id, String fullname, String description, int status) {
@@ -62,8 +69,11 @@ public class User implements Serializable{
         this.description = description;
         this.status = status;
     }
-    
-    
+
+    public User(String username) {
+        this.username = username;
+    }
+
     public int getId() {
         return id;
     }
@@ -111,8 +121,5 @@ public class User implements Serializable{
     public void setStatus(int status) {
         this.status = status;
     }
-
-    
-    
 
 }

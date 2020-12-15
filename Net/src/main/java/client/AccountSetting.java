@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.User;
@@ -22,6 +23,7 @@ import model.UserSocket;
 public class AccountSetting extends javax.swing.JFrame {
 
     UserSocket usersocket;
+    Socket socket;
 
     /**
      * Creates new form AccountSetting
@@ -30,8 +32,10 @@ public class AccountSetting extends javax.swing.JFrame {
         initComponents();
     }
 
-    public AccountSetting(UserSocket usersocket) {
-        this.usersocket = usersocket;
+    public AccountSetting(Socket socket) {
+        usersocket= new UserSocket();
+        socket=usersocket.getSocket();
+        this.socket = socket;
 
     }
 
