@@ -15,8 +15,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Process;
+import model.User;
 import model.UserSocket;
 import server.dao.CheckLogout;
+import server.dao.GetUser;
 
 public class StartServer extends javax.swing.JFrame {
 
@@ -201,6 +203,10 @@ class ServerControl extends Thread {
                         //them user vao listUserSocket
 
                         //chuyen trang thai thanh on cho user
+                        User user = new User();
+                        user = GetUser.getUserByUsername(p.getUser().getUsername());
+                        System.out.println("fullname serrver:"+user.getFullname());
+                        p.setUser(user);
                         p.setReply(true);
                         StartServer.listUserSocket.add(new UserSocket(socket, p.getUser()));
                         System.out.println(socket.getPort() + ":" + "Login Success");
@@ -242,9 +248,11 @@ class ServerControl extends Thread {
 
                 }
                 if (p.getControl().equals("logout")) {
+                    System.out.println("logout");
                     OutputStream outputStream = socket.getOutputStream();
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-                    if (CheckLogout.checkLogout(p.getUser().getUsername()) == 1) {
+//                    CheckLogout.checkLogout(p.getUser().getUsername()) == 1
+                    if (true) {
                         p.setReply(true);
                         System.out.println("Logged out");
 

@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import model.User;
 import model.UserSocket;
@@ -23,6 +24,7 @@ import model.UserSocket;
 public class Main extends javax.swing.JFrame {
 
     Socket socket = null;
+    User user = null;
     private final String header[] = {"Status", "Full name"};
     private DefaultTableModel tblModel;
     private String usernameRecent;
@@ -37,6 +39,20 @@ public class Main extends javax.swing.JFrame {
         usernameRecent = username;
         this.tblModel = new DefaultTableModel(header, 0);
         initComponents();
+    }
+    
+    public Main(UserSocket userSocket){
+        initComponents();
+        this.userSocket = userSocket;
+        lbFullname.setText(userSocket.getUser().getFullname());
+
+    }
+    
+    public Main(Socket socket, User user){
+        this.socket = socket;
+//        this.user =user;
+        
+//        lbFullname.setText(this.user.getFullname());
     }
 
     public Main(Socket socket) { //userSOCKET
@@ -83,6 +99,7 @@ public class Main extends javax.swing.JFrame {
         btnLogOut = new javax.swing.JButton();
         btnSetting = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -228,6 +245,13 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jButton3.setText("jButton3");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -235,10 +259,16 @@ public class Main extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(109, 109, 109)
+                        .addComponent(jButton3)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -251,7 +281,9 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 57, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -307,15 +339,20 @@ public class Main extends javax.swing.JFrame {
 
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
       try{
-        OutputStream outputStream;
-        outputStream = socket.getOutputStream();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+         
+          OutputStream outputStream = userSocket.getSocket().getOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            
+            
+        
         String control = "logout";
-        User user = new User(usernameRecent);
+        System.out.println("check logout");
+        User user = new User(userSocket.getUser().getUsername());
         //  Message message = new Message();
         model.Process p = new model.Process(control, user);
         objectOutputStream.writeObject(p);
-        InputStream inputStream = socket.getInputStream();
+          
+        InputStream inputStream = userSocket.getSocket().getInputStream();
         ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
         p = (model.Process) objectInputStream.readObject();
 
@@ -341,10 +378,14 @@ public class Main extends javax.swing.JFrame {
     private void btnSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSettingActionPerformed
         // new AccountSetting(usersocket);
         /// userSocket = new UserSocket();
-        AccountSetting acc = new AccountSetting(socket);
+        AccountSetting acc = new AccountSetting(userSocket);
         acc.setVisible(true);
-        dispose();
     }//GEN-LAST:event_btnSettingActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+         AccountSetting accountSetting = new AccountSetting();
+         accountSetting.setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -384,6 +425,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton btnSetting;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;

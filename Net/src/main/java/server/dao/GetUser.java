@@ -46,9 +46,9 @@ public class GetUser {
                 id = rs.getInt("id");
                 des = rs.getString("description");
 
-                if (!uname.equals(username)) {
+                
                     user = new User(id, uname, fullname, password, des, status);
-                }
+                
 
             }
         } catch (SQLException e) {

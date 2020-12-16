@@ -32,11 +32,18 @@ public class AccountSetting extends javax.swing.JFrame {
         initComponents();
     }
 
+    public AccountSetting(UserSocket userSocket){
+        initComponents();
+        this.usersocket = userSocket;
+        txtFullName.setText(userSocket.getUser().getUsername());
+        txtUsername.setText(userSocket.getUser().getUsername());
+        
+        
+    }
     public AccountSetting(Socket socket) {
-        usersocket= new UserSocket();
-        socket=usersocket.getSocket();
+//        usersocket= new UserSocket();
+//        socket=usersocket.getSocket();
         this.socket = socket;
-
     }
 
     /**

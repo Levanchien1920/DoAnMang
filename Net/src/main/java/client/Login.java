@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import model.Message;
 import model.Process;
 import model.User;
+import model.UserSocket;
 /**
  *
  * @author iamChien.iter
@@ -152,10 +153,11 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnLogin)
-                    .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnLogin)
+                        .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(66, Short.MAX_VALUE))
         );
 
@@ -184,7 +186,11 @@ public class Login extends javax.swing.JFrame {
     
             if(p.getReply() == true){
                 System.out.println("Login true");
-                Main main = new Main(socket); //
+                System.out.println("Full name:"+p.getUser().getFullname());
+                User u = new User(1, "abx", "xyz", "thich", 1);
+                UserSocket userSocket = new UserSocket(socket, u);
+//                Main main = new Main(socket, p.getUser()); //
+Main main = new Main(userSocket);
                 main.setVisible(true);
                 dispose();
             }else{
