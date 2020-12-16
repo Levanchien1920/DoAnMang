@@ -253,7 +253,7 @@ public class Register extends javax.swing.JFrame {
             outputStream = socket.getOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
             String control = "register";
-            User user = new User(username,fullname, password,description);
+            User user = new User(username, fullname, password, description);
             //  Message message = new Message();
             model.Process p = new model.Process(control, user);
             objectOutputStream.writeObject(p);
@@ -285,7 +285,9 @@ public class Register extends javax.swing.JFrame {
     }//GEN-LAST:event_btResetActionPerformed
 
     private void btExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExitActionPerformed
-
+        Login login = new Login(socket); //
+        login.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btExitActionPerformed
 
     private void txtDesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDesActionPerformed
