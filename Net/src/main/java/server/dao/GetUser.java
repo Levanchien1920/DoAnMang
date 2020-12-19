@@ -46,9 +46,7 @@ public class GetUser {
                 id = rs.getInt("id");
                 des = rs.getString("description");
 
-                
-                    user = new User(id, uname, fullname, password, des, status);
-                
+                user = new User(id, uname, fullname, password, des, status);
 
             }
         } catch (SQLException e) {
@@ -73,7 +71,7 @@ public class GetUser {
         try {
             con = MyConnection.getConnection();
             st = con.createStatement();
-            String sql = "Select id,fullname,status,description from user";
+            String sql = "Select id,username,fullname,status,description from user";
             rs = st.executeQuery(sql);
 
             while (rs.next()) {
@@ -82,14 +80,53 @@ public class GetUser {
                 uname = rs.getString("username");
                 id = rs.getInt("id");
                 des = rs.getString("description");
-
-                User user = new User(id, fullname, des, status);
-                users.add(user);
-
+                if (!uname.equals(username)) {
+                    User user = new User(id, fullname, des, status);
+                    users.add(user);
+                }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return users;
+    }
+
+    public static List<User> getAll() {
+        List<User> users = new ArrayList<>();
+        Connection con = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        String fullname = null;
+        int status = 0;
+        String uname = null;
+        int id = 0;
+        String des = null;
+        String password = null;
+
+        try {
+            con = MyConnection.getConnection();
+            st = con.createStatement();
+            String sql = "Select * from user";
+            rs = st.executeQuery(sql);
+
+            while (rs.next()) {
+                id = rs.getInt("id");
+                uname = rs.getString("username");
+                fullname = rs.getString("fullname");
+                password = rs.getString("password");
+                status = rs.getInt("status");
+                des = rs.getString("description");
+                User user = new User(id, uname, fullname, password, des, status);
+                users.add(user);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return users;
     }
 }

@@ -28,7 +28,14 @@ public class StartServer extends javax.swing.JFrame {
 
     public StartServer() {
         initComponents();
-
+    }
+    
+    public static void loadUser(){
+        List<User> listUser = GetUser.getAll();
+        for(User user: listUser){
+            UserSocket userSocket = new UserSocket(null, user);
+            listUserSocket.add(userSocket);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -97,16 +104,18 @@ public class StartServer extends javax.swing.JFrame {
                 String port = txtPort.getText();
                 try {
                     serverSocket = new ServerSocket(Integer.parseInt(port));
+                    StartServer.loadUser();
+                    for(UserSocket u : StartServer.listUserSocket){
+                        System.out.println(u.getUser().getId());
+                    }
                     System.out.println("Server is started");
                     while (true) {
                         Socket socket = serverSocket.accept();
-
                         //new thread
                         ServerControl control = new ServerControl(socket);
                         control.start();
                         ServerChat chat = new ServerChat(socket);
                         chat.start();
-
                         System.out.println(socket);
                     }
                 } catch (IOException ex) {
@@ -203,10 +212,13 @@ class ServerControl extends Thread {
                         //them user vao listUserSocket
 
                         //chuyen trang thai thanh on cho user
-                        User user = new User();
-                        user = GetUser.getUserByUsername(p.getUser().getUsername());
-                        System.out.println("fullname serrver:"+user.getFullname());
+                       
+                        User user = GetUser.getUserByUsername(p.getUser().getUsername());
+                        List<User> listUser = GetUser.getAll(p.getUser().getUsername());
+                        System.out.println("start server:"+listUser.get(1).getFullname());
+                        System.out.println("fullname serrver:" + user.getFullname());
                         p.setUser(user);
+                        p.setListUsers(listUser);
                         p.setReply(true);
                         StartServer.listUserSocket.add(new UserSocket(socket, p.getUser()));
                         System.out.println(socket.getPort() + ":" + "Login Success");
@@ -221,7 +233,7 @@ class ServerControl extends Thread {
 //register 
                     OutputStream outputStream = socket.getOutputStream();
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-                    if (server.dao.CheckRegister.checkRegister(p.getUser().getUsername(), p.getUser().getPassword(), p.getUser().getFullname(),p.getUser().getDescription())) {
+                    if (server.dao.CheckRegister.checkRegister(p.getUser().getUsername(), p.getUser().getPassword(), p.getUser().getFullname(), p.getUser().getDescription())) {
                         p.setReply(true);
                         StartServer.listUserSocket.add(new UserSocket(socket, p.getUser()));
                         System.out.println("Register successfully");
@@ -261,7 +273,7 @@ class ServerControl extends Thread {
                         System.out.println("Cannot logout");
                     }
                     objectOutputStream.writeObject(p);
-
+                    //for() gui 
                 }
             }
         } catch (IOException ex) {

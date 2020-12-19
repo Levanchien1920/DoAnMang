@@ -41,8 +41,8 @@ public class CheckLogin {
             if (rs.next()) {
                 int executeUpdate = st.executeUpdate(sqlUpdateStatus);
                 JOptionPane.showMessageDialog(null, "Password and Username is correct");
-                Main a = new Main(username);
-                a.setVisible(true);
+//                Main a = new Main(username);
+//                a.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(null, "Password and Username is incorrect");
                 Register r = new Register();

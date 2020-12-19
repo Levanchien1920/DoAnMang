@@ -10,7 +10,6 @@
   </SyntheticProperties>
   <Events>
     <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosing"/>
-    <EventHandler event="windowOpened" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowOpened"/>
   </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -206,6 +205,9 @@
                   <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tblFriendMouseClicked"/>
+              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable()"/>
                 <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="ImageIcon icon1 = new ImageIcon(&quot;C:\\Users\\caoquangtrong\\OneDrive\\Documents\\NetBeansProjects\\mavenproject1\\src\\main\\java\\angry.png&quot;);&#xa;ImageIcon icon2 = new ImageIcon(&quot;C://Users//caoquangtrong//OneDrive//Documents//NetBeansProjects//mavenproject1//src//main//java//happy.png&quot;);&#xa;ImageIcon icon3 = new ImageIcon(&quot;C://Users//caoquangtrong//OneDrive//Documents//NetBeansProjects//mavenproject1//src//main//java//sad.png&quot;);&#xa;&#xa;Object [][] rows = {&#xa;{icon1, icon2, icon3}&#xa;};&#xa;&#xa;String [] columns = {&quot;ic1&quot;, &quot;ic2&quot;, &quot;ic3&quot;};&#xa;DefaultTableModel model = new DefaultTableModel(rows, columns){&#xa;    public Class &lt;?&gt; getColClass(int column){&#xa;        switch (column){&#xa;            case 0: return ImageIcon.class;&#xa;            case 1: return ImageIcon.class;&#xa;            case 2: return ImageIcon.class;&#xa;            default: return Object.class;&#xa;        }&#xa;    }&#xa;};"/>
@@ -243,7 +245,7 @@
                       </Group>
                       <Group type="102" attributes="0">
                           <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                          <Component id="jLabel3" max="32767" attributes="0"/>
+                          <Component id="lblDes" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -255,7 +257,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="lbFullname" min="-2" pref="26" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jLabel3" pref="28" max="32767" attributes="0"/>
+                  <Component id="lblDes" pref="28" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnSetting" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -307,7 +309,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSettingActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel3">
+        <Component class="javax.swing.JLabel" name="lblDes">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="Y&#xea;u m&#xe0;u h&#x1ed3;ng gh&#xe9;t s&#x1ef1; gi&#x1ea3; d&#x1ed1;i"/>

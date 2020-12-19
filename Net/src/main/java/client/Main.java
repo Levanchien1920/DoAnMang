@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.net.Socket;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
@@ -17,17 +16,12 @@ import javax.swing.JTable;
 import model.User;
 import model.UserSocket;
 
-/**
- *
- * @author caoquangtrong
- */
-public class Main extends javax.swing.JFrame {
 
-    Socket socket = null;
+public class Main extends javax.swing.JFrame {
     User user = null;
+    List<User> listUsers = new ArrayList<>();
     private final String header[] = {"Status", "Full name"};
     private DefaultTableModel tblModel;
-    private String usernameRecent;
     private UserSocket userSocket;
 
     public Main() {
@@ -35,30 +29,15 @@ public class Main extends javax.swing.JFrame {
         initComponents();
     }
 
-    public Main(String username) {
-        usernameRecent = username;
+    public Main(UserSocket userSocket, List<User> list) {
+        initComponents();
         this.tblModel = new DefaultTableModel(header, 0);
-        initComponents();
-    }
-    
-    public Main(UserSocket userSocket){
-        initComponents();
+        
         this.userSocket = userSocket;
         lbFullname.setText(userSocket.getUser().getFullname());
-
-    }
-    
-    public Main(Socket socket, User user){
-        this.socket = socket;
-//        this.user =user;
-        
-//        lbFullname.setText(this.user.getFullname());
-    }
-
-    public Main(Socket socket) { //userSOCKET
-        this.socket = socket;
-        this.tblModel = new DefaultTableModel(header, 0);
-        initComponents();
+        lblDes.setText(userSocket.getUser().getDescription());
+        this.listUsers = list;
+        loadAllFriend(listUsers);
     }
 
     @SuppressWarnings("unchecked")
@@ -98,16 +77,13 @@ public class Main extends javax.swing.JFrame {
         lbFullname = new javax.swing.JLabel();
         btnLogOut = new javax.swing.JButton();
         btnSetting = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        lblDes = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
-            }
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
             }
         });
 
@@ -160,6 +136,11 @@ public class Main extends javax.swing.JFrame {
         tblFriend.setRequestFocusEnabled(false);
         tblFriend.setRowHeight(30);
         tblFriend.getTableHeader().setReorderingAllowed(false);
+        tblFriend.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblFriendMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblFriend);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -212,8 +193,8 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Yêu màu hồng ghét sự giả dối");
+        lblDes.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDes.setText("Yêu màu hồng ghét sự giả dối");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -229,7 +210,7 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(btnLogOut))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(lblDes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -237,7 +218,7 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(lbFullname, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                .addComponent(lblDes, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSetting)
@@ -304,10 +285,8 @@ public class Main extends javax.swing.JFrame {
             }
             Object o1 = icon;
             Object o2 = users.get(i).getFullname();
-
             data[i][0] = o1;
             data[i][1] = o2;
-
             System.out.println(users.get(i).getFullname() + " :" + users.get(i).getStatus());
 
         }
@@ -328,43 +307,30 @@ public class Main extends javax.swing.JFrame {
 
     }
 
-
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-
-        // List<User> users = new ArrayList<>();
-        //users = GetUser.getUserByUsername(usernameRecent);
-        //loadAllFriend(users);
-        // lbFullname.setText(usernameRecent);
-    }//GEN-LAST:event_formWindowOpened
-
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
-      try{
-         
-          OutputStream outputStream = userSocket.getSocket().getOutputStream();
+        try {
+            OutputStream outputStream = userSocket.getSocket().getOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-            
-            
-        
-        String control = "logout";
-        System.out.println("check logout");
-        User user = new User(userSocket.getUser().getUsername());
-        //  Message message = new Message();
-        model.Process p = new model.Process(control, user);
-        objectOutputStream.writeObject(p);
-          
-        InputStream inputStream = userSocket.getSocket().getInputStream();
-        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-        p = (model.Process) objectInputStream.readObject();
+            String control = "logout";
+            System.out.println("check logout");
+            User user = new User(userSocket.getUser().getUsername());
+            //  Message message = new Message();
+            model.Process p = new model.Process(control, user);
+            objectOutputStream.writeObject(p);
+            InputStream inputStream = userSocket.getSocket().getInputStream();
+            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+            p = (model.Process) objectInputStream.readObject();
 
-        if (p.getReply() == true) {
-            System.out.println("Logged out");
-            Login login = new Login(socket); //
-            login.setVisible(true);
-            dispose();
-        } else {
-            System.out.println("Can't log out");
-        }
-      }catch (IOException ex) {
+            if (p.getReply() == true) {
+                System.out.println("Logged out" + userSocket.getSocket());
+
+                Login login = new Login(userSocket.getSocket()); //
+                login.setVisible(true);
+                dispose();
+            } else {
+                System.out.println("Can't log out");
+            }
+        } catch (IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
@@ -383,9 +349,18 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSettingActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-         AccountSetting accountSetting = new AccountSetting();
-         accountSetting.setVisible(true);
+        AccountSetting accountSetting = new AccountSetting();
+        accountSetting.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void tblFriendMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblFriendMouseClicked
+        JTable source = (JTable)evt.getSource();
+        int row = source.rowAtPoint( evt.getPoint() );
+        int column = source.columnAtPoint( evt.getPoint() );
+        String s=source.getModel().getValueAt(row, column)+"";
+
+        JOptionPane.showMessageDialog(null, listUsers.get(row).getId());
+    }//GEN-LAST:event_tblFriendMouseClicked
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -427,7 +402,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -436,6 +410,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lbFullname;
+    private javax.swing.JLabel lblDes;
     private javax.swing.JTable tblFriend;
     // End of variables declaration//GEN-END:variables
 }

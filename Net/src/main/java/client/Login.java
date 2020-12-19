@@ -20,6 +20,7 @@ import model.Message;
 import model.Process;
 import model.User;
 import model.UserSocket;
+
 /**
  *
  * @author iamChien.iter
@@ -30,21 +31,18 @@ public class Login extends javax.swing.JFrame {
     ResultSet rs = null;
     PreparedStatement pst = null;
     Socket socket = null;
-    
+
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-    
-    public Login(Socket soc){
+
+    public Login(Socket soc) {
         initComponents();
         this.setLocationRelativeTo(null);
         socket = soc;
         System.out.println(socket);
     }
-
-    
-   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -170,8 +168,8 @@ public class Login extends javax.swing.JFrame {
         String password = txtPassword.getText();
         OutputStream outputStream;
         try {
-            if(socket==null){
-                System.out.println("ABC");
+            if (socket == null) {
+                System.out.println("Login: Socket null");
             }
             outputStream = socket.getOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
@@ -179,21 +177,23 @@ public class Login extends javax.swing.JFrame {
             User user = new User(username, password);
             Message message = new Message();
             Process p = new Process(control, user, message);
-            objectOutputStream.writeObject(p);
+            objectOutputStream.writeObject(p); //gui cho server
+            //cho nhan thong tin tu server
+            //can 1 list user
             InputStream inputStream = socket.getInputStream();
             ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-            p = (Process)objectInputStream.readObject();
-    
-            if(p.getReply() == true){
-                System.out.println("Login true");
-                System.out.println("Full name:"+p.getUser().getFullname());
-                User u = new User(1, "abx", "xyz", "thich", 1);
-                UserSocket userSocket = new UserSocket(socket, u);
-//                Main main = new Main(socket, p.getUser()); //
-Main main = new Main(userSocket);
+            p = (Process) objectInputStream.readObject();
+
+            if (p.getReply() == true) {
+                System.out.println("Login true, full name:"+ p.getUser().getFullname());
+                UserSocket userSocket = new UserSocket(socket, p.getUser());
+                for(User u : p.getListUsers()){
+                    System.out.println(u.getFullname());
+                }
+                Main main = new Main(userSocket, p.getListUsers());
                 main.setVisible(true);
                 dispose();
-            }else{
+            } else {
                 System.out.println("Login false");
             }
         } catch (IOException ex) {
@@ -201,7 +201,7 @@ Main main = new Main(userSocket);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
@@ -214,7 +214,6 @@ Main main = new Main(userSocket);
         re.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnRegisterActionPerformed
-
 
     /**
      * @param args the command line arguments

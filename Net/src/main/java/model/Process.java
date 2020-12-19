@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -17,6 +18,23 @@ public class Process implements Serializable {
     private Message message;
     private String control;
     private Boolean reply;
+    private List<User> listUsers;
+
+    public Process(User user, Message message, String control, Boolean reply, List<User> listUsers) {
+        this.user = user;
+        this.message = message;
+        this.control = control;
+        this.reply = reply;
+        this.listUsers = listUsers;
+    }
+    
+    public List<User> getListUsers() {
+        return listUsers;
+    }
+
+    public void setListUsers(List<User> listUsers) {
+        this.listUsers = listUsers;
+    }
 
     public Process(User user, Message message, String control, Boolean reply) {
         this.user = user;

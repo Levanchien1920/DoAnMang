@@ -6,28 +6,30 @@
 package model;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 /**
  *
  * @author iamChien.iter
  */
-public class Message implements Serializable{
+public class Message implements Serializable {
 
     private int id_msg;
     private String body_msg;
-    private String user_from;
-    private String date_send;
+    private int id_user_from;
+    private Date date_send;
     private int id_con;
 
-    public Message(int id_msg, String body_msg, String user_from, String date_send, int id_con) {
-        this.id_msg = id_msg;
-        this.body_msg = body_msg;
-        this.user_from = user_from;
-        this.date_send = date_send;
-        this.id_con = id_con;
+    public Message() {
     }
 
-    public Message() {
+    
+    public Message(int id_msg, String body_msg, int id_user_from, Date date_send, int id_con) {
+        this.id_msg = id_msg;
+        this.body_msg = body_msg;
+        this.id_user_from = id_user_from;
+        this.date_send = date_send;
+        this.id_con = id_con;
     }
     
     
@@ -48,19 +50,19 @@ public class Message implements Serializable{
         this.body_msg = body_msg;
     }
 
-    public String getUser_from() {
-        return user_from;
+    public int getId_user_from() {
+        return id_user_from;
     }
 
-    public void setUser_from(String user_from) {
-        this.user_from = user_from;
+    public void setId_user_from(int id_user_from) {
+        this.id_user_from = id_user_from;
     }
 
-    public String getDate_send() {
+    public Date getDate_send() {
         return date_send;
     }
 
-    public void setDate_send(String date_send) {
+    public void setDate_send(Date date_send) {
         this.date_send = date_send;
     }
 
@@ -71,5 +73,9 @@ public class Message implements Serializable{
     public void setId_con(int id_con) {
         this.id_con = id_con;
     }
+    
+    
+
+    
 
 }
