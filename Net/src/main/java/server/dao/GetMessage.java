@@ -2,14 +2,14 @@ package server.dao;
 
 import connection.MyConnection;
 import java.sql.Connection;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import model.Message;
-import model.User;
+
 
 public class GetMessage {
     public static List<Message> getMessageByIdCon(int idConversation) {
@@ -22,7 +22,7 @@ public class GetMessage {
         String body;
         int id_user_from;
         int id_con;
-        Date date_send;
+        Timestamp date_send;
         
         try {
             con = MyConnection.getConnection();
@@ -35,7 +35,7 @@ public class GetMessage {
                 body = rs.getString("body_msg");
                 id_user_from = rs.getInt("id_user_from");
                 id_con = rs.getInt("id_con");
-                date_send = rs.getDate("date_send");
+                date_send = rs.getTimestamp("date_send");
                 Message me = new Message(id_message, body, id_user_from, date_send, id_con);
                 messages.add(me);
             }

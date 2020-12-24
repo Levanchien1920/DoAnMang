@@ -5,6 +5,12 @@
  */
 package client;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.html.HTMLDocument;
+
 /**
  *
  * @author iamChien.iter
@@ -16,6 +22,7 @@ public class MainFrameAllClient extends javax.swing.JFrame {
      */
     public MainFrameAllClient() {
         initComponents();
+
     }
 
     /**
@@ -27,16 +34,15 @@ public class MainFrameAllClient extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtPaint = new javax.swing.JTextPane();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Welcome, user01");
+        jScrollPane1.setViewportView(txtPaint);
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(0, 0, 204));
-        jButton1.setText("LOGOUT");
+        jButton1.setText("jButton1");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -48,27 +54,91 @@ public class MainFrameAllClient extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(172, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addGap(29, 29, 29))
+                .addGap(151, 151, 151))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel1))
-                .addContainerGap(266, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                .addComponent(jButton1)
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        txtPaint.setContentType("text/html"); // let the text pane know this is what you want
+        txtPaint.setText("<html>\n" +
+"<style>\n" +
+"    /* Chat containers */\n" +
+"    .container {\n" +
+"        border: 2px solid #dedede;\n" +
+"        background-color: #f1f1f1;\n" +
+"        border-radius: 5px;\n" +
+"        padding-left: 10px;\n" +
+"        margin:5px 0;\n" +
+"    }\n" +
+"\n" +
+"    /* Darker chat container */\n" +
+"    .darker {\n" +
+"        border-color: rgb(94, 102, 212);\n" +
+"        background-color: #ddd;\n" +
+"    }\n" +
+"\n" +
+"    /* Clear floats */\n" +
+"    .container::after {\n" +
+"        content: \"\";\n" +
+"        clear: both;\n" +
+"        display: table;\n" +
+"    }\n" +
+"\n" +
+"    /* Style the right image */\n" +
+"    .container img.right {\n" +
+"        float: right;\n" +
+"        margin-left: 30px;\n" +
+"        margin-right: 0;\n" +
+"    }\n" +
+"\n" +
+"    /* Style time text */\n" +
+"    .time-right {\n" +
+"        float: right;\n" +
+"        color: #aaa;\n" +
+"    }\n" +
+"\n" +
+"    /* Style time text */\n" +
+"    .time-left {\n" +
+"        float: left;\n" +
+"        color: #999;\n" +
+"    }\n" +
+"</style>\n" +
+"<div class=\"container\">\n" +
+"    <p><b>Trong:</b>Hello. How are you today?</p>\n" +
+"    <span class=\"time-right\">11:00</span>\n" +
+"</div>\n" +
+"\n" +
+"<div class=\"container darker\">\n" +
+"    <p><b>Trong:</b>Hey! I'm fine. Thanks for asking!</p>\n" +
+"    <span class=\"time-left\">11:01</span>\n" +
+"</div>\n" +
+"<div class=\"container\">\n" +
+"    <p><b>Trong:</b>Sweet! So, what do you wanna do today?</p>\n" +
+"    <span class=\"time-right\">11:02</span>\n" +
+"</div>\n" +
+"<div class=\"container darker\">\n" +
+"    <p><b>Trong:</b>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>\n" +
+"    <span class=\"time-left\">11:05</span>\n" +
+"</div>\n" +
+"\n" +
+"</html>"); // showing off
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -108,6 +178,7 @@ public class MainFrameAllClient extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextPane txtPaint;
     // End of variables declaration//GEN-END:variables
 }

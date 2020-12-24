@@ -5,11 +5,13 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author iamChien.iter
  */
-public class Conversation {
+public class Conversation implements Serializable{
     private int id_con;
     private int id_from;
     private int id_to;
