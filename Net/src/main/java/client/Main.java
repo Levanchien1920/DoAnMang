@@ -114,6 +114,7 @@ public class Main extends javax.swing.JFrame {
                                 taChat.setContentType("text/html");
                                 taChat.setText("");
                                 taChat.setText(chatContent);
+                                taChat.setCaretPosition(taChat.getDocument().getLength());
                             }
                         } else if (reProcess.getControl().equals("status")) {
                             listUsers = reProcess.getListUsers();
@@ -180,6 +181,7 @@ public class Main extends javax.swing.JFrame {
         lblIDD = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -497,6 +499,7 @@ public class Main extends javax.swing.JFrame {
         taChat.setContentType("text/html");
         taChat.setText("");
         taChat.setText(chatContent);
+        taChat.setCaretPosition(taChat.getDocument().getLength());
     }//GEN-LAST:event_tblFriendMouseClicked
 
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
@@ -552,6 +555,7 @@ public class Main extends javax.swing.JFrame {
         taChat.setContentType("text/html");
         taChat.setText("");
         taChat.setText(chatContent);
+        taChat.setCaretPosition(taChat.getDocument().getLength());
 
         System.out.println("Chat to " + idFriendChat + ":" + textSend);
 

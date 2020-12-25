@@ -1,0 +1,10 @@
+C:\Users\caoquangtrong\OneDrive\Documents\Visual Studio 2017\WorkSpace\DoAnMangHDH\DoAnMangHDH\bin\Debug\DoAnMangHDH.exe.config
+C:\Users\caoquangtrong\OneDrive\Documents\Visual Studio 2017\WorkSpace\DoAnMangHDH\DoAnMangHDH\bin\Debug\DoAnMangHDH.exe
+C:\Users\caoquangtrong\OneDrive\Documents\Visual Studio 2017\WorkSpace\DoAnMangHDH\DoAnMangHDH\bin\Debug\DoAnMangHDH.pdb
+C:\Users\caoquangtrong\OneDrive\Documents\Visual Studio 2017\WorkSpace\DoAnMangHDH\DoAnMangHDH\obj\Debug\DoAnMangHDH.csprojAssemblyReference.cache
+C:\Users\caoquangtrong\OneDrive\Documents\Visual Studio 2017\WorkSpace\DoAnMangHDH\DoAnMangHDH\obj\Debug\DoAnMangHDH.Properties.Resources.resources
+C:\Users\caoquangtrong\OneDrive\Documents\Visual Studio 2017\WorkSpace\DoAnMangHDH\DoAnMangHDH\obj\Debug\DoAnMangHDH.csproj.GenerateResource.cache
+C:\Users\caoquangtrong\OneDrive\Documents\Visual Studio 2017\WorkSpace\DoAnMangHDH\DoAnMangHDH\obj\Debug\DoAnMangHDH.csproj.CoreCompileInputs.cache
+C:\Users\caoquangtrong\OneDrive\Documents\Visual Studio 2017\WorkSpace\DoAnMangHDH\DoAnMangHDH\obj\Debug\DoAnMangHDH.exe
+C:\Users\caoquangtrong\OneDrive\Documents\Visual Studio 2017\WorkSpace\DoAnMangHDH\DoAnMangHDH\obj\Debug\DoAnMangHDH.pdb
+C:\Users\caoquangtrong\OneDrive\Documents\Visual Studio 2017\WorkSpace\DoAnMangHDH\DoAnMangHDH\obj\Debug\DoAnMangHDH.Scheduling.resources

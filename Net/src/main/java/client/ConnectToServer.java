@@ -29,6 +29,7 @@ public class ConnectToServer extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         connectToServer.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         connectToServer.setForeground(new java.awt.Color(0, 0, 204));
@@ -64,6 +65,7 @@ public class ConnectToServer extends javax.swing.JFrame {
         });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 0, 204));
         jLabel3.setText("Connect to Server");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
