@@ -1,5 +1,7 @@
 package client;
 
+import java.awt.BorderLayout;
+import java.awt.Font;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -14,9 +16,12 @@ import javax.swing.table.DefaultTableModel;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import model.ConstString;
 import model.Conversation;
 import model.ListMessage;
 import model.Message;
@@ -34,6 +39,7 @@ public class Main extends javax.swing.JFrame {
     int idFriendChat = 0;
     Thread thread;
     ObjectInputStream objectInputStream;
+    public static Process processForSetting;
 
     public Main() {
         this.tblModel = new DefaultTableModel(header, 0);
@@ -41,16 +47,17 @@ public class Main extends javax.swing.JFrame {
     }
 
     public Main(User user, List<User> list, List<ListMessage> listMessageFromOther) {
+
         initComponents();
         this.tblModel = new DefaultTableModel(header, 0);
         this.user = user;
         lbFullname.setText(user.getFullname());
         lblDes.setText(user.getDescription());
-        lblId.setText(Integer.toString(user.getId()));
         this.listUsers = list;
         loadAllFriend(listUsers);
         this.listMessages = listMessageFromOther;
-
+        btnInfoFriend.setEnabled(false);
+        lblIDD.setText("ID:" + user.getId());
         this.thread = new Thread("Thread start Login: chat") {
             public void run() {
                 try {
@@ -59,17 +66,17 @@ public class Main extends javax.swing.JFrame {
                         model.Process reProcess = (model.Process) objectInputStream.readObject();
                         if (reProcess.getControl().equals("chat")) {
 
-                            System.out.println("Message: "+reProcess.getMessage().getBody_msg() + " from: "+ reProcess.getMessage().getId_user_from());
+                            System.out.println("Message: " + reProcess.getMessage().getBody_msg() + " from: " + reProcess.getMessage().getId_user_from());
                             int id_user = reProcess.getMessage().getId_user_from();
                             int id_friend = reProcess.getMessage().getId_user_to();
-                            boolean check = false;
+                            boolean check = true;
                             for (ListMessage lm : listMessages) {
                                 int idf = lm.getConversation().getId_from();
                                 int idt = lm.getConversation().getId_to();
-                                if ((id_user == idf && id_friend == idt) || id_user == idt && id_friend == idf) {
+                                if ((id_user == idf && id_friend == idt) || (id_user == idt && id_friend == idf)) {
                                     lm.getListMessage().add(reProcess.getMessage());
-                                } else {
-                                    check = true;
+                                    check = false;
+                                    break;
                                 }
                             }
                             if (check) {
@@ -78,33 +85,44 @@ public class Main extends javax.swing.JFrame {
                                 List<Message> list = new ArrayList<Message>();
                                 list.add(reProcess.getMessage());
                                 listMessages.add(new ListMessage(con, list));
+                                System.out.println(id_con + ":");
                             }
-//                            if (id_friend == reProcess.getMessage().getId_user_from()) {
-//                                String chatContent = "";
-//                                for (ListMessage lm : listMessages) {
-//                                    int idf = lm.getConversation().getId_from();
-//                                    int idt = lm.getConversation().getId_to();
-//                                    if ((id_user == idf && id_friend == idt) || id_user == idt && id_friend == idf) {
-//                                        for (Message me : lm.getListMessage()) {
-//
-//                                            String name = "Me";
-//                                            for (User user : listUsers) {
-//                                                if (user.getId() == me.getId_user_from()) {
-//                                                    name = user.getFullname();
-//                                                }
-//                                            }
-//                                            chatContent += name + " : " + me.getBody_msg() + "\t" + me.getDate_send() + "\n";
-//                                        }
-//                                        break;
-//                                    }
-//                                }
-//                                taChat.setText("");
-//                                taChat.setText(chatContent);
-//                            }
+
+                            if (id_user == idFriendChat) {
+                                String chatContent = "";
+                                //listMessage
+                                for (ListMessage lm : listMessages) {
+                                    int idf = lm.getConversation().getId_from();
+                                    int idt = lm.getConversation().getId_to();
+                                    if ((id_user == idf && id_friend == idt) || id_user == idt && id_friend == idf) {
+                                        for (Message me : lm.getListMessage()) {
+                                            String name = "Me";
+                                            Boolean checkName = false;
+                                            for (User user : listUsers) {
+                                                if (user.getId() == me.getId_user_from()) {
+                                                    name = user.getFullname();
+                                                    checkName = true;
+                                                }
+                                            }
+                                            String rowString = ConstString.MessageToString(me, checkName, name);
+                                            chatContent += rowString;
+                                        }
+                                        break;
+                                    }
+                                }
+                                chatContent = ConstString.header + chatContent + ConstString.footer;
+                                taChat.setContentType("text/html");
+                                taChat.setText("");
+                                taChat.setText(chatContent);
+                            }
                         } else if (reProcess.getControl().equals("status")) {
-                            //listUsers = reProcess.getListUsers();
-                            System.out.println("test status");
-//                            loadAllFriend(listUsers);
+                            listUsers = reProcess.getListUsers();
+                            loadAllFriend(listUsers);
+                            
+                        }
+                        else if (reProcess.getControl().equals("setting")) {
+                            Main.processForSetting = reProcess;
+
                         }
                     }
                 } catch (IOException ex) {
@@ -116,7 +134,6 @@ public class Main extends javax.swing.JFrame {
         };
         this.thread.start();
         System.out.println(thread.getName());
-
     }
 
     @SuppressWarnings("unchecked")
@@ -124,12 +141,13 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        taChat = new javax.swing.JTextArea();
         txtSend = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         btnSend = new javax.swing.JButton();
         lblFriend = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        taChat = new javax.swing.JTextPane();
+        btnInfoFriend = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         ImageIcon icon1 = new ImageIcon("C:\\Users\\caoquangtrong\\OneDrive\\Documents\\NetBeansProjects\\mavenproject1\\src\\main\\java\\angry.png");
@@ -159,6 +177,7 @@ public class Main extends javax.swing.JFrame {
         btnSetting = new javax.swing.JButton();
         lblDes = new javax.swing.JLabel();
         lblId = new javax.swing.JLabel();
+        lblIDD = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -166,12 +185,6 @@ public class Main extends javax.swing.JFrame {
                 formWindowClosing(evt);
             }
         });
-
-        taChat.setEditable(false);
-        taChat.setColumns(20);
-        taChat.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        taChat.setRows(5);
-        jScrollPane1.setViewportView(taChat);
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton1.setForeground(new java.awt.Color(0, 0, 255));
@@ -190,6 +203,16 @@ public class Main extends javax.swing.JFrame {
         lblFriend.setForeground(new java.awt.Color(0, 0, 255));
         lblFriend.setText("Chat with friends");
 
+        taChat.setEditable(false);
+        jScrollPane3.setViewportView(taChat);
+
+        btnInfoFriend.setText("Info");
+        btnInfoFriend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInfoFriendActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -197,24 +220,29 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblFriend, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(txtSend, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1)))
-                        .addContainerGap(29, Short.MAX_VALUE))))
+                                .addComponent(jButton1))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblFriend, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnInfoFriend)))
+                        .addContainerGap(86, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(lblFriend, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblFriend, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnInfoFriend))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -261,7 +289,7 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE))
         );
 
         lbFullname.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -290,6 +318,8 @@ public class Main extends javax.swing.JFrame {
         lblDes.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblDes.setText("Yêu màu hồng ghét sự giả dối");
 
+        lblIDD.setText("jLabel1");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -307,8 +337,10 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblDes, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(68, 68, 68))
+                .addComponent(lblDes, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblIDD)
+                .addGap(36, 36, 36))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -317,7 +349,9 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(lbFullname, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblId))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblDes, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDes, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(lblIDD))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSetting)
@@ -331,13 +365,10 @@ public class Main extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -355,8 +386,8 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loadAllFriend(List<User> users) {
-        Icon active = new ImageIcon("C:\\Users\\caoquangtrong\\OneDrive\\Documents\\NetBeansProjects\\DAM\\Net\\src\\main\\java\\image\\on.png");
-        Icon notActive = new ImageIcon("C:\\Users\\caoquangtrong\\OneDrive\\Documents\\NetBeansProjects\\DAM\\Net\\src\\main\\java\\image\\off.png");
+        Icon active = new ImageIcon("src\\main\\java\\image\\on.png");
+        ImageIcon notActive = new ImageIcon("src\\main\\java\\image\\off.png");
         String[] columnNames = {"Status", "Name"};
         int x = users.size();
         Object[][] data = new Object[x][2];
@@ -370,14 +401,16 @@ public class Main extends javax.swing.JFrame {
             Object o2 = users.get(i).getFullname();
             data[i][0] = o1;
             data[i][1] = o2;
-            System.out.println(users.get(i).getFullname() + " :" + users.get(i).getStatus());
-
         }
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             //  Returning the Class of each column will allow different
             //  renderers to be used based on Class
             public Class getColumnClass(int column) {
                 return getValueAt(0, column).getClass();
+            }
+
+            public boolean isCellEditable(int row, int column) {
+                return false;
             }
         };
 
@@ -395,7 +428,7 @@ public class Main extends javax.swing.JFrame {
             model.Process p = new model.Process(control, this.user);
             objectOutputStream.writeObject(p);
             ConnectToServer.socket.close();
-            ConnectToServer connectToServer = new  ConnectToServer();
+            ConnectToServer connectToServer = new ConnectToServer();
             connectToServer.setVisible(true);
             this.dispose();
         } catch (IOException ex) {
@@ -412,7 +445,7 @@ public class Main extends javax.swing.JFrame {
             model.Process p = new model.Process(control, user);
             objectOutputStream.writeObject(p);
             ConnectToServer.socket.close();
-            ConnectToServer connectToServer = new  ConnectToServer();
+            ConnectToServer connectToServer = new ConnectToServer();
             connectToServer.setVisible(true);
             dispose();
         } catch (IOException ex) {
@@ -427,12 +460,14 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSettingActionPerformed
 
     private void tblFriendMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblFriendMouseClicked
+
+        btnInfoFriend.setEnabled(true);
         JTable source = (JTable) evt.getSource();
         int row = source.rowAtPoint(evt.getPoint());
         int column = source.columnAtPoint(evt.getPoint());
         String s = source.getModel().getValueAt(row, column) + "";
 
-        JOptionPane.showMessageDialog(null, listUsers.get(row).getId());
+//        JOptionPane.showMessageDialog(null, listUsers.get(row).getId());
         int id_friend = listUsers.get(row).getId();
         lblFriend.setText(listUsers.get(row).getFullname());
         this.idFriendChat = id_friend;
@@ -445,17 +480,21 @@ public class Main extends javax.swing.JFrame {
             if ((id_user == idf && id_friend == idt) || id_user == idt && id_friend == idf) {
                 for (Message me : lm.getListMessage()) {
                     String name = "Me";
+                    Boolean check = false;
                     for (User user : listUsers) {
                         if (user.getId() == me.getId_user_from()) {
                             name = user.getFullname();
+                            check = true;
                         }
                     }
-                    String rowString = name+":"+me.getBody_msg();
-                    chatContent += name + " : " + me.getBody_msg() + "\t" + me.getDate_send() + "\n";
+                    String rowString = ConstString.MessageToString(me, check, name);
+                    chatContent += rowString;
                 }
                 break;
             }
         }
+        chatContent = ConstString.header + chatContent + ConstString.footer;
+        taChat.setContentType("text/html");
         taChat.setText("");
         taChat.setText(chatContent);
     }//GEN-LAST:event_tblFriendMouseClicked
@@ -463,11 +502,11 @@ public class Main extends javax.swing.JFrame {
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
         String textSend = txtSend.getText();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        
+
         int id_user = user.getId();
         int id_friend = idFriendChat;
         Message newMessage = new Message(textSend, user.getId(), timestamp, idFriendChat);
-        
+
         boolean check = true;
         for (ListMessage lm : listMessages) {
             int idf = lm.getConversation().getId_from();
@@ -480,15 +519,15 @@ public class Main extends javax.swing.JFrame {
             }
         }
         if (check) {
-            int id_con = id_user*10+id_friend;
+            int id_con = id_user * 10 + id_friend;
             newMessage.setId_con(id_con);
             Conversation con = new Conversation(id_con, id_user, id_friend);
             List<Message> list = new ArrayList<Message>();
             list.add(newMessage);
             listMessages.add(new ListMessage(con, list));
         }
-        JOptionPane.showMessageDialog(null, Integer.toString(newMessage.getId_con()));
-        
+//        JOptionPane.showMessageDialog(null, Integer.toString(newMessage.getId_con()));
+
         String chatContent = "";
         for (ListMessage lm : listMessages) {
             int idf = lm.getConversation().getId_from();
@@ -496,16 +535,21 @@ public class Main extends javax.swing.JFrame {
             if ((id_user == idf && id_friend == idt) || id_user == idt && id_friend == idf) {
                 for (Message me : lm.getListMessage()) {
                     String name = "Me";
+                    Boolean checkName = false;
                     for (User user : listUsers) {
                         if (user.getId() == me.getId_user_from()) {
                             name = user.getFullname();
+                            checkName = true;
                         }
                     }
-                    chatContent += name + " : " + me.getBody_msg() + "\t" + me.getDate_send() + "\n";
+                    String rowString = ConstString.MessageToString(me, checkName, name);
+                    chatContent += rowString;
                 }
                 break;
             }
         }
+        chatContent = ConstString.header + chatContent + ConstString.footer;
+        taChat.setContentType("text/html");
         taChat.setText("");
         taChat.setText(chatContent);
 
@@ -515,11 +559,31 @@ public class Main extends javax.swing.JFrame {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(ConnectToServer.outputStream);
             Process process = new Process("chat", user, newMessage);
             objectOutputStream.writeObject(process);
-            
+
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
+        txtSend.setText("");
     }//GEN-LAST:event_btnSendActionPerformed
+
+    private void btnInfoFriendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInfoFriendActionPerformed
+        int id = idFriendChat;
+        String name = "";
+        String dec = "";
+        for (User user : listUsers) {
+            if (id == user.getId()) {
+                name = user.getFullname();
+                dec = user.getDescription();
+                break;
+            }
+        }
+        String result = "ID : " + id + "\n" + "Full name : " + name + "\n" + "Decription : " + dec;
+
+        JOptionPane.showConfirmDialog(null, result, "Info Friend", JOptionPane.INFORMATION_MESSAGE);
+
+        //JOptionPane.showMessageDialog(null, result, "Info Friend", JOptionPane.INFORMATION_MESSAGE);
+
+    }//GEN-LAST:event_btnInfoFriendActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -555,6 +619,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnInfoFriend;
     private javax.swing.JButton btnLogOut;
     private javax.swing.JButton btnSend;
     private javax.swing.JButton btnSetting;
@@ -563,13 +628,14 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lbFullname;
     private javax.swing.JLabel lblDes;
     private javax.swing.JLabel lblFriend;
+    private javax.swing.JLabel lblIDD;
     private javax.swing.JLabel lblId;
-    private javax.swing.JTextArea taChat;
+    private javax.swing.JTextPane taChat;
     private javax.swing.JTable tblFriend;
     private javax.swing.JTextField txtSend;
     // End of variables declaration//GEN-END:variables

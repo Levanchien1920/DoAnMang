@@ -53,23 +53,23 @@ public class MainFrameAllClient extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(154, 154, 154))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(172, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(151, 151, 151))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 493, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -77,66 +77,60 @@ public class MainFrameAllClient extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         txtPaint.setContentType("text/html"); // let the text pane know this is what you want
-        txtPaint.setText("<html>\n" +
-"<style>\n" +
-"    /* Chat containers */\n" +
-"    .container {\n" +
-"        border: 2px solid #dedede;\n" +
-"        background-color: #f1f1f1;\n" +
-"        border-radius: 5px;\n" +
-"        padding-left: 10px;\n" +
-"        margin:5px 0;\n" +
-"    }\n" +
+        txtPaint.setText("<!DOCTYPE html>\n" +
+"<html>\n" +
 "\n" +
-"    /* Darker chat container */\n" +
-"    .darker {\n" +
-"        border-color: rgb(94, 102, 212);\n" +
-"        background-color: #ddd;\n" +
-"    }\n" +
+"<head>\n" +
+"    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+"    <style>\n" +
+"        body {\n" +
+"            margin: 0 0px;\n" +
+"            padding: 0 10px;\n" +
+"        }\n" +
 "\n" +
-"    /* Clear floats */\n" +
-"    .container::after {\n" +
-"        content: \"\";\n" +
-"        clear: both;\n" +
-"        display: table;\n" +
-"    }\n" +
+"        .container {\n" +
+"            border: 2px solid #dedede;\n" +
+"            background-color: #f1f1f1;\n" +
+"            border-radius: 10px;\n" +
+"            padding: 5px;\n" +
+"            margin: 5px 0;\n" +
+"        }\n" +
 "\n" +
-"    /* Style the right image */\n" +
-"    .container img.right {\n" +
-"        float: right;\n" +
-"        margin-left: 30px;\n" +
-"        margin-right: 0;\n" +
-"    }\n" +
+"        .darker {\n" +
+"            border: 2px solid #0e0c92;\n" +
+"            background-color: #f1f1f1;\n" +
+"            border-radius: 10px;\n" +
+"            padding: 5px;\n" +
+"            margin: 5px 0;\n" +
+"        }\n" +
+"    </style>\n" +
+"</head>\n" +
 "\n" +
-"    /* Style time text */\n" +
-"    .time-right {\n" +
-"        float: right;\n" +
-"        color: #aaa;\n" +
-"    }\n" +
+"<body>\n" +
+"    <div class=\"container\">\n" +
+"        <div>Hello. How are you today?</div>\n" +
+"        <span>11:00</span>\n" +
+"    </div>\n" +
 "\n" +
-"    /* Style time text */\n" +
-"    .time-left {\n" +
-"        float: left;\n" +
-"        color: #999;\n" +
-"    }\n" +
-"</style>\n" +
-"<div class=\"container\">\n" +
-"    <p><b>Trong:</b>Hello. How are you today?</p>\n" +
-"    <span class=\"time-right\">11:00</span>\n" +
-"</div>\n" +
+"    <div class=\"darker\">\n" +
+"        <div>Hey! I'm fine. Thanks for asking!Hey! I'm fine. Thanks for asking!Hey! I'm fine. Thanks for asking!Hey! I'm\n" +
+"            fine. Thanks for asking!</div>\n" +
+"        <span>11:01</span>\n" +
+"    </div>\n" +
+"    <div class=\"container\">\n" +
+"        <div>Sweet! So, what do you wanna do today?</div>\n" +
+"        <span>11:02</span>\n" +
+"    </div>\n" +
+"    <div class=\"container\">\n" +
+"        <div>Sweet! So, what do you wanna do today?</div>\n" +
+"        <span>11:02</span>\n" +
+"    </div>\n" +
+"    <div class=\"darker\">\n" +
+"        <div>Nah, I dunno. Play soccer.. or learn more coding perhaps?</div>\n" +
+"        <span>11:05</span>\n" +
+"    </div>\n" +
 "\n" +
-"<div class=\"container darker\">\n" +
-"    <p><b>Trong:</b>Hey! I'm fine. Thanks for asking!</p>\n" +
-"    <span class=\"time-left\">11:01</span>\n" +
-"</div>\n" +
-"<div class=\"container\">\n" +
-"    <p><b>Trong:</b>Sweet! So, what do you wanna do today?</p>\n" +
-"    <span class=\"time-right\">11:02</span>\n" +
-"</div>\n" +
-"<div class=\"container darker\">\n" +
-"    <p><b>Trong:</b>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>\n" +
-"    <span class=\"time-left\">11:05</span>\n" +
-"</div>\n" +
+"</body>\n" +
 "\n" +
 "</html>"); // showing off
     }//GEN-LAST:event_jButton1ActionPerformed

@@ -5,10 +5,33 @@
  */
 package server.dao;
 
+import connection.MyConnection;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 /**
  *
  * @author iamChien.iter
  */
 public class CheckAccountSetting {
 
+    public static boolean checkAccountSetting(int id, String username, String fullname, String description) {
+        Connection con = null;
+        Statement st = null;
+        int result = 0;
+        boolean t = false;
+        try {
+            con = MyConnection.getConnection();
+            st = con.createStatement();
+            String sql1 = "UPDATE user SET username='" + username + "',fullname='" + fullname + "',description='" + description + "' WHERE id=" + id;
+            result = st.executeUpdate(sql1);
+            t = true;
+            return t;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return t;
+    }
 }

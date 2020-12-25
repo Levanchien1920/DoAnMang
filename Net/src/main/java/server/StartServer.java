@@ -23,6 +23,7 @@ import server.dao.GetConversation;
 import server.dao.GetUser;
 import model.Conversation;
 import model.ListMessage;
+import server.dao.CheckAccountSetting;
 import server.dao.GetMessage;
 
 public class StartServer extends javax.swing.JFrame {
@@ -115,11 +116,8 @@ public class StartServer extends javax.swing.JFrame {
                     System.out.println("Server is started");
                     while (true) {
                         Socket socket = serverSocket.accept();
-                        //new thread
                         ServerControl control = new ServerControl(socket);
                         control.start();
-//                        ServerChat chat = new ServerChat(socket);
-//                        chat.start();
                         System.out.println("Connected:" + socket);
                     }
                 } catch (IOException ex) {
@@ -172,39 +170,14 @@ public class StartServer extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 }
 
-class ServerChat extends Thread {
-
-    private Socket socket;
-
-    public ServerChat(Socket socket) {
-        this.socket = socket;
-    }
-
-    @Override
-    public void run() {
-        while (true) {
-            InputStream inputStream;
-            try {
-                inputStream = this.socket.getInputStream();
-                ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                Process process = (Process) objectInputStream.readObject();
-                System.out.println("Chat:" + "" + process.getUser().getFullname() + ":" + process.getMessage().getBody_msg());
-            } catch (IOException ex) {
-                Logger.getLogger(ServerChat.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ServerChat.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-    }
-
-}
-
 class ServerControl extends Thread {
+
     private Socket socket;
+
     public ServerControl(Socket socket) {
         this.socket = socket;
     }
+
     @Override
     public void run() {
         try {
@@ -218,18 +191,14 @@ class ServerControl extends Thread {
                     OutputStream outputStream = socket.getOutputStream();
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
                     if (CheckLogin.checkLogin(p.getUser().getUsername(), p.getUser().getPassword())) {
-
                         User user = GetUser.getUserByUsername(p.getUser().getUsername());
                         List<User> listUser = GetUser.getAll(p.getUser().getUsername());
-
                         p.setUser(user);
                         p.setListUsers(listUser);
                         p.setReply(true);
-
                         int index = 0;
                         //update usersocket
                         for (UserSocket us : StartServer.listUserSocket) {
-
                             if (p.getUser().getId() == us.getUser().getId()) {
                                 if (us.getSocket() != null) {
                                     p.setReply(false);
@@ -239,21 +208,6 @@ class ServerControl extends Thread {
                             }
                             index++;
                         }
-                        //update status other socket
-//                        for(UserSocket us: StartServer.listUserSocket){
-//                            
-//                            if(us.getSocket()!= null && us.getSocket()!=socket){
-//                                List<User> list = GetUser.getAll(us.getUser().getUsername());
-//                                Process process = new Process(list, "status");
-//
-//                                ObjectOutputStream objOut;
-//                                try (OutputStream out = us.getSocket().getOutputStream()) {
-//                                    objOut = new ObjectOutputStream(out);
-//                                    objOut.writeObject(process);
-//                                }
-//                                objOut.close();
-//                            }
-//                        }
 
                         List<Conversation> listConversations = GetConversation.getAllConversations(p.getUser().getId());
                         List<ListMessage> listMessages = new ArrayList<>();
@@ -267,22 +221,24 @@ class ServerControl extends Thread {
                         objectOutputStream.writeObject(p);
 
                         //cap nhat trang thai cho cac user khac
+                        for (UserSocket us : StartServer.listUserSocket) {
+                            if (us.getUser().getId() != p.getUser().getId()) {
+                                if (us.getSocket() != null) {
+                                    List<User> listUserUpdate = GetUser.getAll(us.getUser().getUsername());
+                                    OutputStream ooutputStream = us.getSocket().getOutputStream();
+                                    ObjectOutputStream oobjectOutputStream = new ObjectOutputStream(ooutputStream);
+                                    Process pp = new Process(listUserUpdate, "status");
+                                    oobjectOutputStream.writeObject(pp);
+                                }
+                            }
+                            index++;
+                        }
                     } else {
                         p.setReply(false);
                         System.out.println("Login Failure" + socket);
                         objectOutputStream.writeObject(p);
                     }
 
-//                    for (UserSocket us : StartServer.listUserSocket) {
-//                        if (us.getUser().getId() != p.getUser().getId() && us.getSocket() != null) {
-//                            OutputStream o = us.getSocket().getOutputStream();
-//                            ObjectOutputStream oo = new ObjectOutputStream(o);
-//                            Process po = new Process(GetUser.getAll(us.getUser().getUsername()), "status");
-//                            oo.writeObject(po);
-//                            o.close();
-//                            oo.close();
-//                        }
-//                    }
                     System.out.println("State UserSocket:");
                     for (UserSocket us : StartServer.listUserSocket) {
                         System.out.println("\t" + us.toString());
@@ -290,36 +246,95 @@ class ServerControl extends Thread {
 
                 }
                 if (p.getControl().equals("register")) {
-                    OutputStream outputStream = socket.getOutputStream();
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+
                     if (server.dao.CheckRegister.checkRegister(p.getUser().getUsername(), p.getUser().getPassword(), p.getUser().getFullname(), p.getUser().getDescription())) {
                         p.setReply(true);
-                        StartServer.listUserSocket.add(new UserSocket(socket, p.getUser()));
+                        User user = GetUser.getUserByUsername(p.getUser().getUsername());
+                        StartServer.listUserSocket.add(new UserSocket(null, user));
                         System.out.println("Register successfully");
+
+                        for (UserSocket us : StartServer.listUserSocket) {
+                            if (us.getUser().getId() != p.getUser().getId()) {
+                                if (us.getSocket() != null) {
+                                    List<User> listUserUpdate = GetUser.getAll(us.getUser().getUsername());
+                                    OutputStream outputStreamm = us.getSocket().getOutputStream();
+                                    ObjectOutputStream objectOutputStreamm = new ObjectOutputStream(outputStreamm);
+                                    Process pp = new Process(listUserUpdate, "status");
+                                    objectOutputStreamm.writeObject(pp);
+                                }
+                            }
+                        }
 
                     } else {
                         p.setReply(false);
                         System.out.println("Register failed");
                     }
+                    OutputStream outputStream = socket.getOutputStream();
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
                     objectOutputStream.writeObject(p);
                 }
                 if (p.getControl().equals("setting")) {
-                    System.out.println("Account Setting "+p.getUser().getFullname());
+
+                    if (CheckAccountSetting.checkAccountSetting(p.getUser().getId(), p.getUser().getUsername(),
+                            p.getUser().getFullname(), p.getUser().getDescription())) {
+                        p.setReply(true);
+
+                        for (UserSocket us : StartServer.listUserSocket) {
+                            if (us.getUser().getId() == p.getUser().getId()) {
+                                us.setUser(p.getUser());
+                            }
+                        }
+
+//                        for (UserSocket us : StartServer.listUserSocket) {
+//                            if (us.getSocket() != null) {
+//                                List<User> listUserUpdate = GetUser.getAll(us.getUser().getUsername());
+//                                OutputStream outputStreamm = us.getSocket().getOutputStream();
+//                                ObjectOutputStream objectOutputStreamm = new ObjectOutputStream(outputStreamm);
+//                                Process pp = new Process(listUserUpdate, "setting");
+//                                pp.setReply(true);
+//                                objectOutputStreamm.writeObject(pp);
+//                            }
+//                        }
+
+                        System.out.println("Setting complete");
+
+                    } else {
+                        p.setReply(false);
+                        System.out.println("Cannot setting");
+                    }
+                    OutputStream outputStream = socket.getOutputStream();
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                    objectOutputStream.writeObject(p);
 
                 }
                 if (p.getControl().equals("logout")) {
-                    System.out.println("Logout Success:" + socket);
-                    int index = 0;
-                    for (UserSocket us : StartServer.listUserSocket) {
-                        User tempUser = us.getUser();
-                        if (p.getUser().getId() == us.getUser().getId()) {
-                            StartServer.listUserSocket.set(index, new UserSocket(null, tempUser));
+                    if (CheckLogout.checkLogout(p.getUser().getUsername()) == 1) {
+                        System.out.println("Logout Success:" + socket);
+                        int index = 0;
+                        for (UserSocket us : StartServer.listUserSocket) {
+                            User tempUser = us.getUser();
+                            if (p.getUser().getId() == us.getUser().getId()) {
+                                StartServer.listUserSocket.set(index, new UserSocket(null, tempUser));
+                            }
+                            index++;
                         }
-                        index++;
-                    }
-                    System.out.println("State UserSocket:");
-                    for (UserSocket us : StartServer.listUserSocket) {
-                        System.out.println("\t" + us.toString());
+                        System.out.println("State UserSocket:");
+                        for (UserSocket us : StartServer.listUserSocket) {
+                            System.out.println("\t" + us.toString());
+                        }
+
+                        for (UserSocket us : StartServer.listUserSocket) {
+                            if (us.getUser().getId() != p.getUser().getId()) {
+                                if (us.getSocket() != null) {
+                                    List<User> listUserUpdate = GetUser.getAll(us.getUser().getUsername());
+                                    OutputStream outputStream = us.getSocket().getOutputStream();
+                                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                                    Process pp = new Process(listUserUpdate, "status");
+                                    objectOutputStream.writeObject(pp);
+                                }
+                            }
+                            index++;
+                        }
                     }
                 }
                 if (p.getControl().equals("chat")) {
@@ -327,9 +342,8 @@ class ServerControl extends Thread {
                     int id_to = p.getMessage().getId_user_to();
                     String sms = p.getMessage().getBody_msg();
 
-
-                    if (GetConversation.checkIsConversationExist(p.getMessage())==1) {
-                        System.out.println("Message: "+p.getMessage().getBody_msg() + " from: "+ p.getMessage().getId_user_from()+ " to: "+ p.getMessage().getId_user_to());
+                    if (GetConversation.checkIsConversationExist(p.getMessage()) == 1) {
+                        System.out.println("Message: " + p.getMessage().getBody_msg() + " from: " + p.getMessage().getId_user_from() + " to: " + p.getMessage().getId_user_to());
                         int index = 0;
                         for (UserSocket us : StartServer.listUserSocket) {
                             if (id_to == us.getUser().getId()) {

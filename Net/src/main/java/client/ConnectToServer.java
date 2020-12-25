@@ -31,7 +31,7 @@ public class ConnectToServer extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        connectToServer.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        connectToServer.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         connectToServer.setForeground(new java.awt.Color(0, 0, 204));
         connectToServer.setText("Connect to server");
         connectToServer.addActionListener(new java.awt.event.ActionListener() {
@@ -40,20 +40,25 @@ public class ConnectToServer extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 51, 204));
         jLabel1.setText("IP Address:");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 51, 204));
         jLabel2.setText("Server Port:");
 
+        txtHost.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtHost.setText("192.168.43.213");
+        txtHost.setToolTipText("");
         txtHost.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtHostActionPerformed(evt);
             }
         });
 
+        txtIp.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtIp.setText("1111");
         txtIp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtIpActionPerformed(evt);
@@ -65,32 +70,32 @@ public class ConnectToServer extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(65, 65, 65)
+                .addGap(53, 53, 53)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
-                .addGap(34, 34, 34)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(connectToServer)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(txtHost)
-                        .addComponent(txtIp, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)))
-                .addContainerGap(63, Short.MAX_VALUE))
+                        .addComponent(txtIp, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(101, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap(50, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtHost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtIp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33)
                 .addComponent(connectToServer)
-                .addGap(85, 85, 85))
+                .addGap(61, 61, 61))
         );
 
         pack();
@@ -100,16 +105,18 @@ public class ConnectToServer extends javax.swing.JFrame {
         try {
             String host = txtHost.getText();
             String port = txtIp.getText();
-            socket = new Socket(InetAddress.getLocalHost(), Integer.parseInt(port));
+            socket = new Socket(host, Integer.parseInt(port));
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
             Login login = new Login();
             login.setVisible(true);
             this.setVisible(false);
         } catch (UnknownHostException ex) {
-            Logger.getLogger(ConnectToServer.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(ConnectToServer.class.getName()).log(Level.SEVERE, null, ex);
+System.out.println("Client Stopped");
         } catch (IOException ex) {
-            Logger.getLogger(ConnectToServer.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(ConnectToServer.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Client Stopped");
         }
     }//GEN-LAST:event_connectToServerActionPerformed
 

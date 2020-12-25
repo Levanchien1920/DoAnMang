@@ -14,6 +14,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import model.User;
 import model.Process;
 
@@ -219,12 +220,12 @@ public class AccountSetting extends javax.swing.JFrame {
                                 .addComponent(jLabel7)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(52, 52, 52)
+                                .addGap(28, 28, 28)
                                 .addComponent(jLabel3))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(28, 28, 28)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
+                        .addGap(34, 34, 34)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnExit)
                             .addComponent(btnSave))
@@ -235,29 +236,26 @@ public class AccountSetting extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-
         String username = txtUsername.getText();
         String des = txtDescription.getText();
         String fullname = txtFullName.getText();
-        this.user.setUsername(username);
-        this.user.setDescription(des);
-        this.user.setFullname(fullname);
+        int id = user.getId();
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(ConnectToServer.outputStream);
-            Process process = new Process("setting", this.user);
-            objectOutputStream.writeObject(process);
+            String control = "setting";
+            User user = new User(id, username, fullname, des);
+            //  Message message = new Message();
+            model.Process p = new model.Process(control, user);
+            objectOutputStream.writeObject(p);
 
-            ObjectInputStream objectInputStream = new ObjectInputStream(ConnectToServer.inputStream);
-            process = (Process) objectInputStream.readObject();
-            if (process.getControl().equals("setting") && process.getReply() == true) {
-                System.out.println("Setting ok");
+
+            if (Main.processForSetting.getReply() == true && Main.processForSetting.getControl().equals("setting")) {
+                JOptionPane.showConfirmDialog(null, "Change setting successful");
             } else {
-                System.out.println("Setting Error");
+                JOptionPane.showConfirmDialog(null, "Can't setting");
             }
         } catch (IOException ex) {
-            Logger.getLogger(AccountSetting.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AccountSetting.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 

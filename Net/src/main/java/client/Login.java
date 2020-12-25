@@ -175,9 +175,11 @@ public class Login extends javax.swing.JFrame {
 
             }
         } catch (IOException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Client Stopped");
+//            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Client Stopped");
+//            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_btnLoginActionPerformed
@@ -188,9 +190,9 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-//        Register re = new Register(socket);
-//        re.setVisible(true);
-//        dispose();
+        Register register = new Register();
+        register.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     public static void main(String args[]) {

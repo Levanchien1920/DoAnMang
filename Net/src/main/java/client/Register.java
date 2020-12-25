@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import model.User;
 
 public class Register extends javax.swing.JFrame {
@@ -214,40 +215,26 @@ public class Register extends javax.swing.JFrame {
 //        });
 //    }
     private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
-//        CheckRegister checkregister = new CheckRegister();
-//        if(checkregister.checkRegister(txtUsernameInput.getText(), txtPassword.getText(), txtFullname.getText())){
-//            JOptionPane.showMessageDialog(null, "Sucessfully");
-//            dispose();
-//            Login login = new Login();
-//            login.setVisible(true);
-//        }
         String username = txtUsernameInput.getText();
         String password = txtPassword.getText();
         String fullname = txtFullname.getText();
         String description = txtDes.getText();
         OutputStream outputStream;
         try {
-            if (socket == null) {
-                System.out.println("ABC");
-            }
-            outputStream = socket.getOutputStream();
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(ConnectToServer.outputStream);
             String control = "register";
             User user = new User(username, fullname, password, description);
-            //  Message message = new Message();
+            
             model.Process p = new model.Process(control, user);
             objectOutputStream.writeObject(p);
-            InputStream inputStream = socket.getInputStream();
-            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+            ObjectInputStream objectInputStream = new ObjectInputStream(ConnectToServer.inputStream);
             p = (model.Process) objectInputStream.readObject();
 
-            if (p.getReply() == true) {
-                System.out.println("Registered");
-                Login login = new Login(); //
-                login.setVisible(true);
-                dispose();
+            if (p.getReply() == true && p.getControl().equals("register")) {
+                JOptionPane.showConfirmDialog(null, "Register Successful");
             } else {
-                System.out.println("Can't register");
+                JOptionPane.showConfirmDialog(null, "Register Failed");
             }
         } catch (IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
