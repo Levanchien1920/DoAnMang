@@ -21,17 +21,19 @@ import model.Process;
 public class AccountSetting extends javax.swing.JFrame {
 
     User user;
+    Main m;
 
     public AccountSetting() {
         initComponents();
     }
 
-    public AccountSetting(User user) {
+    public AccountSetting(User user, Main main) {
         initComponents();
         this.user = user;
         txtFullName.setText(user.getFullname());
         txtUsername.setText(user.getUsername());
         txtDescription.setText(user.getDescription());
+        m = main;
     }
 
     @SuppressWarnings("unchecked")
@@ -240,22 +242,22 @@ public class AccountSetting extends javax.swing.JFrame {
         String des = txtDescription.getText();
         String fullname = txtFullName.getText();
         int id = user.getId();
-        try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(ConnectToServer.outputStream);
-            String control = "setting";
-            User user = new User(id, username, fullname, des);
-            //  Message message = new Message();
-            model.Process p = new model.Process(control, user);
-            objectOutputStream.writeObject(p);
-
-
-            if (Main.processForSetting.getReply() == true && Main.processForSetting.getControl().equals("setting")) {
-                JOptionPane.showConfirmDialog(null, "Change setting successful");
-            } else {
-                JOptionPane.showConfirmDialog(null, "Can't setting");
-            }
-        } catch (IOException ex) {
+        int result = JOptionPane.showConfirmDialog(null, " Setting success \n You must login again!");
+        if (result == 0) {
+            try {
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(ConnectToServer.outputStream);
+                String control = "setting";
+                User user = new User(id, username, fullname, des);
+                //  Message message = new Message();
+                model.Process p = new model.Process(control, user);
+                objectOutputStream.writeObject(p);
+            } catch (IOException ex) {
 //            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ConnectToServer connectToServer = new ConnectToServer();
+            connectToServer.setVisible(true);
+            m.setVisible(false);
+            this.setVisible(false);
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 

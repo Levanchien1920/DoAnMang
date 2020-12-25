@@ -285,27 +285,52 @@ class ServerControl extends Thread {
                             }
                         }
 
-//                        for (UserSocket us : StartServer.listUserSocket) {
-//                            if (us.getSocket() != null) {
-//                                List<User> listUserUpdate = GetUser.getAll(us.getUser().getUsername());
-//                                OutputStream outputStreamm = us.getSocket().getOutputStream();
-//                                ObjectOutputStream objectOutputStreamm = new ObjectOutputStream(outputStreamm);
-//                                Process pp = new Process(listUserUpdate, "setting");
-//                                pp.setReply(true);
-//                                objectOutputStreamm.writeObject(pp);
-//                            }
-//                        }
+                        for (UserSocket us : StartServer.listUserSocket) {
+                            if (us.getUser().getId() != p.getUser().getId()) {
+                                if (us.getSocket() != null) {
+                                    List<User> listUserUpdate = GetUser.getAll(us.getUser().getUsername());
+                                    OutputStream outputStreamm = us.getSocket().getOutputStream();
+                                    ObjectOutputStream objectOutputStreamm = new ObjectOutputStream(outputStreamm);
+                                    Process pp = new Process(listUserUpdate, "status");
+                                    objectOutputStreamm.writeObject(pp);
+                                }
+                            }
+                        }
+
+                        if (CheckLogout.checkLogout(p.getUser().getUsername()) == 1) {
+                            System.out.println("Logout Success:" + socket);
+                            int index = 0;
+                            for (UserSocket us : StartServer.listUserSocket) {
+                                User tempUser = us.getUser();
+                                if (p.getUser().getId() == us.getUser().getId()) {
+                                    StartServer.listUserSocket.set(index, new UserSocket(null, tempUser));
+                                }
+                                index++;
+                            }
+                            System.out.println("State UserSocket:");
+                            for (UserSocket us : StartServer.listUserSocket) {
+                                System.out.println("\t" + us.toString());
+                            }
+
+                            for (UserSocket us : StartServer.listUserSocket) {
+                                if (us.getUser().getId() != p.getUser().getId()) {
+                                    if (us.getSocket() != null) {
+                                        List<User> listUserUpdate = GetUser.getAll(us.getUser().getUsername());
+                                        OutputStream outputStream = us.getSocket().getOutputStream();
+                                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                                        Process pp = new Process(listUserUpdate, "status");
+                                        objectOutputStream.writeObject(pp);
+                                    }
+                                }
+                                index++;
+                            }
+                        }
 
                         System.out.println("Setting complete");
-
                     } else {
                         p.setReply(false);
                         System.out.println("Cannot setting");
                     }
-                    OutputStream outputStream = socket.getOutputStream();
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-                    objectOutputStream.writeObject(p);
-
                 }
                 if (p.getControl().equals("logout")) {
                     if (CheckLogout.checkLogout(p.getUser().getUsername()) == 1) {

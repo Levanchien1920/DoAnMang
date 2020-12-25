@@ -121,8 +121,8 @@ public class Main extends javax.swing.JFrame {
                             
                         }
                         else if (reProcess.getControl().equals("setting")) {
-                            Main.processForSetting = reProcess;
-
+                            listUsers = reProcess.getListUsers();
+                            loadAllFriend(listUsers);
                         }
                     }
                 } catch (IOException ex) {
@@ -230,7 +230,7 @@ public class Main extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton1))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblFriend, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblFriend, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnInfoFriend)))
                         .addContainerGap(86, Short.MAX_VALUE))))
@@ -454,7 +454,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void btnSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSettingActionPerformed
-        AccountSetting ac = new AccountSetting(this.user);
+        AccountSetting ac = new AccountSetting(this.user, this);
         ac.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         ac.setVisible(true);
     }//GEN-LAST:event_btnSettingActionPerformed

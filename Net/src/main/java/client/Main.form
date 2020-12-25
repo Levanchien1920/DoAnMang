@@ -70,7 +70,7 @@
                                   <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
-                                  <Component id="lblFriend" min="-2" pref="134" max="-2" attributes="0"/>
+                                  <Component id="lblFriend" min="-2" pref="133" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btnInfoFriend" min="-2" max="-2" attributes="0"/>
                               </Group>
