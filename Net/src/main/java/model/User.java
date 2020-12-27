@@ -27,8 +27,6 @@ public class User implements Serializable {
         this.description = description;
     }
 
-    
-    
     public User(int id, String username, String fullname, String password, String description, int status) {
         this.id = id;
         this.username = username;
@@ -81,6 +79,19 @@ public class User implements Serializable {
 
     public User(String username) {
         this.username = username;
+    }
+
+    public User(int id, String username, String fullname, String password, String description) {
+        this.id = id;
+        this.username = username;
+        this.fullname = fullname;
+        this.password = password;
+        this.description = description;
+    }
+
+    public User(int id, String password) {
+        this.id = id;
+        this.password = password;
     }
 
     public int getId() {

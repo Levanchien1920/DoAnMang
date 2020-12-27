@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import model.Message;
 import model.Process;
 import model.User;
@@ -127,7 +128,7 @@ public class StartServer extends javax.swing.JFrame {
                 try {
                     serverSocket = new ServerSocket(Integer.parseInt(port));
                     StartServer.loadUser();
-
+                    JOptionPane.showConfirmDialog(null, "Server is started!");
                     System.out.println("Server is started");
                     while (true) {
                         Socket socket = serverSocket.accept();
@@ -291,7 +292,7 @@ class ServerControl extends Thread {
                 if (p.getControl().equals("setting")) {
 
                     if (CheckAccountSetting.checkAccountSetting(p.getUser().getId(), p.getUser().getUsername(),
-                            p.getUser().getFullname(), p.getUser().getDescription())) {
+                            p.getUser().getFullname(), p.getUser().getPassword(), p.getUser().getDescription())) {
                         p.setReply(true);
 
                         for (UserSocket us : StartServer.listUserSocket) {
@@ -311,7 +312,6 @@ class ServerControl extends Thread {
                                 }
                             }
                         }
-
                         if (CheckLogout.checkLogout(p.getUser().getUsername()) == 1) {
                             System.out.println("Logout Success:" + socket);
                             int index = 0;

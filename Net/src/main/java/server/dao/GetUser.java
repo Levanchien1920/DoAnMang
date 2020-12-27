@@ -43,6 +43,7 @@ public class GetUser {
                 fullname = rs.getString("fullname");
                 status = rs.getInt("status");
                 uname = rs.getString("username");
+                password= rs.getString("password");
                 id = rs.getInt("id");
                 des = rs.getString("description");
 
